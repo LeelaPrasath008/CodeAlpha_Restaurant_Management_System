@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Restaurant Tables</title>
+
+    <style>
+
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+            font-family:Arial,sans-serif;
+        }
+
+        body{
+            background:#f4f6f9;
+            padding:40px;
+        }
+
+        .container{
+            max-width:1200px;
+            margin:auto;
+        }
+
+        h1{
+            text-align:center;
+            margin-bottom:30px;
+            color:#2c3e50;
+        }
+
+        .table-grid{
+            display:grid;
+            grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+            gap:20px;
+        }
+
+        .table-card{
+            background:white;
+            border-radius:15px;
+            padding:25px;
+            box-shadow:0 4px 12px rgba(0,0,0,0.1);
+            transition:0.3s;
+            text-align:center;
+        }
+
+        .table-card:hover{
+            transform:translateY(-5px);
+        }
+
+        .table-number{
+            font-size:28px;
+            font-weight:bold;
+            color:#2c3e50;
+            margin-bottom:10px;
+        }
+
+        .capacity{
+            font-size:18px;
+            margin-bottom:15px;
+            color:#555;
+        }
+
+        .badge{
+            display:inline-block;
+            padding:8px 15px;
+            border-radius:20px;
+            font-weight:bold;
+        }
+
+        .available{
+            background:#d4edda;
+            color:#155724;
+        }
+
+        .occupied{
+            background:#f8d7da;
+            color:#721c24;
+        }
+
+        .navbar{
+            background:#2c3e50;
+            color:white;
+            padding:15px 30px;
+            margin-bottom:30px;
+
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+
+            border-radius:10px;
+        }
+
+        .nav-links a{
+            color:white;
+            text-decoration:none;
+            margin-left:20px;
+            font-weight:bold;
+        }
+
+        .nav-links a:hover{
+            text-decoration:underline;
+        }
+
+    </style>
+
+</head>
+<body>
+<nav class="navbar">
+    <h2>🍽 Restaurant Management</h2>
+
+    <div class="nav-links">
+        <a href="/menu/">Menu</a>
+        <a href="/tables/">Tables</a>
+    </div>
+</nav>
+
+<div class="container">
+
+    <h1>🪑 Restaurant Tables</h1>
+
+    <div class="table-grid">
+
+        {% for table in tables %}
+
+        <div class="table-card">
+
+            <div class="table-number">
+                Table {{ table.table_number }}
+            </div>
+
+            <div class="capacity">
+                Capacity: {{ table.capacity }} Persons
+            </div>
+
+            {% if table.is_available %}
+                <span class="badge available">
+                    Available
+                </span>
+            {% else %}
+                <span class="badge occupied">
+                    Occupied
+                </span>
+            {% endif %}
+
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+</div>
+
+</body>
+</html>

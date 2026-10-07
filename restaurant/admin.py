@@ -13,9 +13,9 @@ class RestaurantTableAdmin(admin.ModelAdmin):
 
 @admin.register(Reservation)
 class ReservationAdmin(admin.ModelAdmin):
-    list_display = ('customer_name', 'table', 'reservation_date', 'status')
+    list_display = ('customer_name', 'phone_number', 'email', 'table', 'reservation_date', 'status')
     list_filter = ('status',)
-    search_fields = ('customer_name',)
+    search_fields = ('customer_name', 'phone_number', 'email')
 
 @admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):

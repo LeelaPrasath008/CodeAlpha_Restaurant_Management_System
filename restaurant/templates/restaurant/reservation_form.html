@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Reserve a Table</title>
+
+    <style>
+
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+            font-family:Arial,sans-serif;
+        }
+
+        body{
+            background:#f4f6f9;
+            padding:40px;
+        }
+
+        .navbar{
+            background:#2c3e50;
+            color:white;
+            padding:15px 30px;
+            margin-bottom:30px;
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            border-radius:10px;
+        }
+
+        .nav-links a{
+            color:white;
+            text-decoration:none;
+            margin-left:20px;
+            font-weight:bold;
+        }
+
+        .container{
+            max-width:700px;
+            margin:auto;
+        }
+
+        .card{
+            background:white;
+            padding:30px;
+            border-radius:15px;
+            box-shadow:0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        h1{
+            text-align:center;
+            margin-bottom:25px;
+            color:#2c3e50;
+        }
+
+        form p{
+            margin-bottom:15px;
+        }
+
+        input, textarea, select{
+            width:100%;
+            padding:10px;
+            border:1px solid #ccc;
+            border-radius:8px;
+            margin-top:5px;
+        }
+
+        button{
+            width:100%;
+            padding:12px;
+            border:none;
+            border-radius:8px;
+            background:#27ae60;
+            color:white;
+            font-size:16px;
+            cursor:pointer;
+        }
+
+        button:hover{
+            background:#219150;
+        }
+
+    </style>
+</head>
+<body>
+
+<nav class="navbar">
+    <h2>🍽 Restaurant Management</h2>
+
+    <div class="nav-links">
+        <a href="/menu/">Menu</a>
+        <a href="/tables/">Tables</a>
+        <a href="/reservations/">Reservations</a>
+    </div>
+</nav>
+
+<div class="container">
+
+    <div class="card">
+
+        <h1>📅 Reserve a Table</h1>
+
+        <form method="POST">
+
+            {% csrf_token %}
+
+            {{ form.as_p }}
+
+            <button type="submit">
+                Reserve Table
+            </button>
+
+        </form>
+
+    </div>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Restaurant Menu</title>
+    <style>
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body{
+            background:#f4f6f9;
+            padding:40px;
+        }
+
+        .container{
+            max-width:1200px;
+            margin:auto;
+        }
+
+        h1{
+            text-align:center;
+            margin-bottom:30px;
+            color:#333;
+        }
+
+        .menu-grid{
+            display:grid;
+            grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+            gap:20px;
+        }
+
+        .card{
+            background:white;
+            border-radius:15px;
+            padding:20px;
+            box-shadow:0 4px 10px rgba(0,0,0,0.1);
+            transition:0.3s;
+        }
+
+        .card:hover{
+            transform:translateY(-5px);
+        }
+
+        .item-name{
+            font-size:22px;
+            font-weight:bold;
+            color:#2c3e50;
+            margin-bottom:10px;
+        }
+
+        .category{
+            display:inline-block;
+            background:#e8f4ff;
+            color:#0077cc;
+            padding:5px 10px;
+            border-radius:20px;
+            font-size:14px;
+            margin-bottom:10px;
+        }
+
+        .price{
+            font-size:24px;
+            color:#27ae60;
+            font-weight:bold;
+            margin:10px 0;
+        }
+
+        .stock{
+            color:#666;
+        }
+
+        .available{
+            color:green;
+            font-weight:bold;
+        }
+
+        .low-stock{
+            color:red;
+            font-weight:bold;
+        }
+        .navbar{
+            background:#2c3e50;
+            color:white;
+            padding:15px 30px;
+            margin-bottom:30px;
+
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+
+            border-radius:10px;
+        }
+
+        .nav-links a{
+            color:white;
+            text-decoration:none;
+            margin-left:20px;
+            font-weight:bold;
+        }
+
+        .nav-links a:hover{
+            text-decoration:underline;
+        }
+    </style>
+</head>
+<body>
+<nav class="navbar">
+    <h2>🍽 Restaurant Management</h2>
+
+    <div class="nav-links">
+        <a href="/menu/">Menu</a>
+        <a href="/tables/">Tables</a>
+    </div>
+</nav>
+<div class="container">
+
+    <h1>🍽 Restaurant Menu</h1>
+
+    <div class="menu-grid">
+
+        {% for item in menu_items %}
+
+        <div class="card">
+
+            <div class="item-name">
+                {{ item.name }}
+            </div>
+
+            <div class="category">
+                {{ item.category }}
+            </div>
+
+            <div class="price">
+                ₹{{ item.price }}
+            </div>
+
+            <div class="stock">
+
+                Stock:
+                {% if item.stock_quantity > 10 %}
+                    <span class="available">
+                        {{ item.stock_quantity }} Available
+                    </span>
+                {% else %}
+                    <span class="low-stock">
+                        Only {{ item.stock_quantity }} Left
+                    </span>
+                {% endif %}
+
+            </div>
+
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+</div>
+
+</body>
+</html>

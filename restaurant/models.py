@@ -19,6 +19,9 @@ class RestaurantTable(models.Model):
 
 class Reservation(models.Model):
     customer_name = models.CharField(max_length=100)
+    phone_number = models.CharField(max_length=15)
+    email = models.EmailField()
+    special_request = models.TextField(blank=True, null=True)
     table = models.ForeignKey(RestaurantTable, on_delete=models.CASCADE)
     reservation_date = models.DateTimeField()
     STATUS_CHOICES = [
