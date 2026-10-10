@@ -1,120 +1,264 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Reserve a Table</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Reservations | Savora</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+    --green: #116149;
+    --dark: #0b332c;
+    --bg: #f5f8f7;
+    --text: #17352e;
+    --muted: #77867f;
+    --border: #e5ece8;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); }
+a { color: inherit; text-decoration: none; }
 
-    <style>
+.sidebar {
+    width: 235px; background: var(--dark); color: white; padding: 27px 15px;
+    position: fixed; inset: 0 auto 0 0; display: flex; flex-direction: column; z-index: 5;
+}
+.brand { display: flex; align-items: center; gap: 11px; padding: 0 10px 36px; }
+.brand-icon { width: 42px; height: 42px; border-radius: 12px; background: #176d55; display: grid; place-items: center; font-size: 22px; }
+.brand h2 { font: 800 23px 'Manrope', sans-serif; }
+.brand p { font-size: 10px; color: #b7cec4; margin-top: 2px; }
+.nav-label { color: #78998b; font-size: 10px; letter-spacing: 1.5px; font-weight: 700; padding: 0 13px; margin-bottom: 12px; }
+.nav { display: grid; gap: 6px; }
+.nav a { display: flex; align-items: center; gap: 13px; padding: 13px 14px; border-radius: 10px; color: #d1e1d9; font-size: 13px; font-weight: 600; }
+.nav a:hover, .nav a.active { background: #205b49; color: white; }
+.nav-icon { width: 21px; text-align: center; font-size: 18px; }
+.sidebar-bottom { margin-top: auto; text-align: center; color: #a9c9b9; padding: 20px 10px; font: italic 16px/1.7 Georgia, serif; }
 
-        *{
-            margin:0;
-            padding:0;
-            box-sizing:border-box;
-            font-family:Arial,sans-serif;
-        }
+.main { margin-left: 235px; min-height: 100vh; }
+.topbar { height: 72px; background: white; border-bottom: 1px solid var(--border); padding: 0 34px; display: flex; align-items: center; justify-content: space-between; }
+.breadcrumb { font-size: 12px; color: var(--muted); }
+.breadcrumb strong { color: var(--text); }
+.admin { display: flex; align-items: center; gap: 10px; font-size: 12px; font-weight: 700; }
+.avatar { width: 35px; height: 35px; display: grid; place-items: center; background: var(--dark); color: white; border-radius: 50%; }
+.content { max-width: 1500px; padding: 32px 34px 45px; margin: auto; }
 
-        body{
-            background:#f4f6f9;
-            padding:40px;
-        }
+.page-heading { margin-bottom: 25px; }
+.eyebrow { color: var(--green); font-size: 10px; font-weight: 800; letter-spacing: 1.7px; text-transform: uppercase; margin-bottom: 8px; }
+h1 { font: 800 clamp(26px, 3vw, 34px) 'Manrope', sans-serif; letter-spacing: -1px; }
+.subtitle { color: var(--muted); font-size: 13px; margin-top: 8px; line-height: 1.7; }
 
-        .navbar{
-            background:#2c3e50;
-            color:white;
-            padding:15px 30px;
-            margin-bottom:30px;
-            display:flex;
-            justify-content:space-between;
-            align-items:center;
-            border-radius:10px;
-        }
+.hero {
+    display: grid; grid-template-columns: 1fr 1fr; background: var(--dark);
+    border-radius: 16px; overflow: hidden; margin-bottom: 25px; min-height: 220px;
+}
+.hero-copy { padding: 30px; display: flex; flex-direction: column; justify-content: center; }
+.hero-copy .eyebrow { color: #a9ddc2; }
+.hero h2 { color: white; font: 800 25px/1.4 'Manrope', sans-serif; }
+.hero p { color: #d1e3da; font-size: 12px; line-height: 1.8; margin-top: 10px; }
+.hero-image { min-height: 220px; }
+.hero-image img { width: 100%; height: 100%; object-fit: cover; display: block; }
 
-        .nav-links a{
-            color:white;
-            text-decoration:none;
-            margin-left:20px;
-            font-weight:bold;
-        }
+.reservation-layout { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(260px, .8fr); gap: 22px; align-items: start; }
+.form-card, .info-card { background: white; border: 1px solid var(--border); border-radius: 14px; overflow: hidden; }
+.card-heading { padding: 22px 24px; border-bottom: 1px solid var(--border); }
+.card-heading h2 { font: 800 18px 'Manrope', sans-serif; }
+.card-heading p { color: var(--muted); font-size: 12px; line-height: 1.7; margin-top: 6px; }
+.form-content { padding: 24px; }
 
-        .container{
-            max-width:700px;
-            margin:auto;
-        }
+.messages { margin-bottom: 18px; }
+.message { padding: 12px 14px; border-radius: 8px; margin-bottom: 8px; font-size: 12px; background: #e5f5ec; color: #17633e; }
+.error-box { padding: 12px 14px; border-radius: 8px; margin-bottom: 18px; font-size: 12px; background: #fff0ef; color: #ad3939; }
+.field { margin-bottom: 19px; }
+.field label { display: block; font-size: 12px; font-weight: 700; margin-bottom: 8px; }
+.field input, .field select, .field textarea {
+    display: block; width: 100%; border: 1px solid #dfe8e2; border-radius: 9px;
+    background: #fbfcfb; color: var(--text); padding: 12px 13px;
+    font: 13px 'DM Sans', sans-serif; outline: none; transition: .2s;
+}
+.field input:focus, .field select:focus, .field textarea:focus {
+    border-color: var(--green); background: white; box-shadow: 0 0 0 3px #11614912;
+}
+.field textarea { min-height: 100px; resize: vertical; }
+.field .helptext { color: var(--muted); font-size: 11px; margin-top: 6px; }
+.field ul.errorlist { list-style: none; color: #bd4141; font-size: 11px; margin: 6px 0; }
+.field-error { color: #bd4141; font-size: 11px; margin-top: 6px; }
+.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0 16px; }
+.form-actions { display: flex; align-items: center; gap: 12px; padding-top: 6px; }
+.button { display: inline-flex; align-items: center; justify-content: center; gap: 8px; border: 0; border-radius: 9px; padding: 13px 18px; background: var(--green); color: white; font-size: 12px; font-weight: 700; cursor: pointer; }
+.button:hover { background: #0c4b39; }
+.button-secondary { background: #edf3ef; color: var(--text); }
+.button-secondary:hover { background: #e0ebe4; }
 
-        .card{
-            background:white;
-            padding:30px;
-            border-radius:15px;
-            box-shadow:0 4px 12px rgba(0,0,0,0.1);
-        }
+.info-image { height: 190px; }
+.info-image img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.info-content { padding: 22px; }
+.info-content h2 { font: 800 18px 'Manrope', sans-serif; }
+.info-content > p { color: var(--muted); font-size: 12px; line-height: 1.8; margin-top: 8px; }
+.info-list { display: grid; gap: 17px; margin-top: 23px; }
+.info-item { display: flex; align-items: flex-start; gap: 12px; }
+.info-icon { flex-shrink: 0; width: 36px; height: 36px; display: grid; place-items: center; background: #eaf4ed; border-radius: 10px; font-size: 17px; }
+.info-item h3 { font-size: 12px; font-weight: 700; }
+.info-item p { font-size: 11px; color: var(--muted); line-height: 1.7; margin-top: 4px; }
+.note { background: #f5f8f6; border-radius: 10px; padding: 14px; margin-top: 22px; font-size: 11px; color: var(--muted); line-height: 1.8; }
+.footer { padding: 25px 0 0; display: flex; justify-content: space-between; gap: 10px; color: #87968f; font-size: 10px; }
+.footer strong { color: #52695e; }
 
-        h1{
-            text-align:center;
-            margin-bottom:25px;
-            color:#2c3e50;
-        }
-
-        form p{
-            margin-bottom:15px;
-        }
-
-        input, textarea, select{
-            width:100%;
-            padding:10px;
-            border:1px solid #ccc;
-            border-radius:8px;
-            margin-top:5px;
-        }
-
-        button{
-            width:100%;
-            padding:12px;
-            border:none;
-            border-radius:8px;
-            background:#27ae60;
-            color:white;
-            font-size:16px;
-            cursor:pointer;
-        }
-
-        button:hover{
-            background:#219150;
-        }
-
-    </style>
+@media (max-width: 1000px) {
+    .reservation-layout { grid-template-columns: 1fr; }
+    .info-card { display: grid; grid-template-columns: 40% 60%; }
+    .info-image { height: 100%; min-height: 250px; }
+}
+@media (max-width: 760px) {
+    .sidebar { width: 67px; padding: 20px 8px; }
+    .brand { justify-content: center; padding: 0 0 28px; }
+    .brand > div:last-child, .nav-label, .nav-text, .sidebar-bottom { display: none; }
+    .nav a { justify-content: center; padding: 13px 5px; }
+    .main { margin-left: 67px; }
+    .topbar { padding: 0 16px; }
+    .content { padding: 23px 16px 30px; }
+    .hero { grid-template-columns: 1fr; }
+    .hero-image { min-height: 160px; max-height: 200px; }
+    .hero-copy { padding: 24px; }
+    .info-card { display: block; }
+    .info-image { height: 190px; min-height: 0; }
+}
+@media (max-width: 520px) {
+    .form-grid { grid-template-columns: 1fr; }
+    .form-content { padding: 18px; }
+    .card-heading { padding: 18px; }
+    .form-actions { align-items: stretch; flex-direction: column; }
+    .button { width: 100%; }
+    .footer { flex-direction: column; }
+}
+</style>
 </head>
+
 <body>
+<aside class="sidebar">
+    <a href="{% url 'home' %}" class="brand">
+        <div class="brand-icon">✦</div>
+        <div><h2>Savora</h2><p>Restaurant Management</p></div>
+    </a>
+    <div class="nav-label">WORKSPACE</div>
+    <nav class="nav">
+        <a href="{% url 'home' %}"><span class="nav-icon">⌂</span><span class="nav-text">Dashboard</span></a>
+        <a href="{% url 'menu' %}"><span class="nav-icon">♨</span><span class="nav-text">Menu</span></a>
+        <a href="{% url 'table-list' %}"><span class="nav-icon">▤</span><span class="nav-text">Tables</span></a>
+        <a href="{% url 'create-reservation' %}" class="active"><span class="nav-icon">▦</span><span class="nav-text">Reservations</span></a>
+        <a href="{% url 'create-order' %}"><span class="nav-icon">🛒</span><span class="nav-text">New Order</span></a>
+        <a href="{% url 'order-list' %}"><span class="nav-icon">☷</span><span class="nav-text">Order History</span></a>
+    </nav>
+    <div class="sidebar-bottom">Good Food<br>Brings People<br>Together</div>
+</aside>
 
-<nav class="navbar">
-    <h2>🍽 Restaurant Management</h2>
+<div class="main">
+    <header class="topbar">
+        <div class="breadcrumb"><a href="{% url 'home' %}">Dashboard</a> &nbsp; / &nbsp; <strong>Reservations</strong></div>
+        <div class="admin"><div class="avatar">A</div><span>Administrator</span></div>
+    </header>
 
-    <div class="nav-links">
-        <a href="/menu/">Menu</a>
-        <a href="/tables/">Tables</a>
-        <a href="/reservations/">Reservations</a>
-    </div>
-</nav>
+    <main class="content">
+        <section class="page-heading">
+            <div class="eyebrow">Guest experience</div>
+            <h1>Make a Reservation</h1>
+            <p class="subtitle">Reserve the right table and make every visit a pleasant experience.</p>
+        </section>
 
-<div class="container">
+        <section class="hero">
+            <div class="hero-copy">
+                <div class="eyebrow">Your table awaits</div>
+                <h2>Good times begin<br>around the table.</h2>
+                <p>Enter your details and preferred dining time to submit a reservation request.</p>
+            </div>
+            <div class="hero-image">
+                <img src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?auto=format&fit=crop&w=1000&q=85" alt="Elegant restaurant dining setup">
+            </div>
+        </section>
 
-    <div class="card">
+        <section class="reservation-layout">
+            <div class="form-card">
+                <div class="card-heading">
+                    <h2>Reservation details</h2>
+                    <p>Complete the details below. Fields marked as required by the form must be filled in.</p>
+                </div>
+                <div class="form-content">
+                    {% if messages %}
+                    <div class="messages">
+                        {% for message in messages %}
+                        <div class="message">{{ message }}</div>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
 
-        <h1>📅 Reserve a Table</h1>
+                    {% if form.non_field_errors %}
+                    <div class="error-box">{{ form.non_field_errors }}</div>
+                    {% endif %}
 
-        <form method="POST">
+                    <form method="post">
+                        {% csrf_token %}
 
-            {% csrf_token %}
+                        {% for field in form %}
+                        <div class="field">
+                            <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                            {{ field }}
+                            {% if field.help_text %}
+                            <div class="helptext">{{ field.help_text }}</div>
+                            {% endif %}
+                            {% for error in field.errors %}
+                            <div class="field-error">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+                        {% endfor %}
 
-            {{ form.as_p }}
+                        <div class="form-actions">
+                            <button type="submit" class="button">Submit reservation →</button>
+                            <a href="{% url 'table-list' %}" class="button button-secondary">View tables</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
 
-            <button type="submit">
-                Reserve Table
-            </button>
+            <aside class="info-card">
+                <div class="info-image">
+                    <img src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=800&q=85" alt="Restaurant interior">
+                </div>
+                <div class="info-content">
+                    <h2>Plan your visit</h2>
+                    <p>A few details help the restaurant prepare for your arrival.</p>
 
-        </form>
+                    <div class="info-list">
+                        <div class="info-item">
+                            <div class="info-icon">▦</div>
+                            <div>
+                                <h3>Choose a table</h3>
+                                <p>Check the tables page for seating capacity and availability.</p>
+                            </div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-icon">◷</div>
+                            <div>
+                                <h3>Provide your time</h3>
+                                <p>Enter the date and time you would like to visit.</p>
+                            </div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-icon">♡</div>
+                            <div>
+                                <h3>Share special requests</h3>
+                                <p>Add any useful notes in the form if a special request field is available.</p>
+                            </div>
+                        </div>
+                    </div>
 
-    </div>
+                    <div class="note">Please double-check your reservation details before submitting. Successful submission confirms that the reservation was saved by the system; it does not independently verify real-world availability.</div>
+                </div>
+            </aside>
+        </section>
 
+        <footer class="footer">
+            <span><strong>Savora</strong> · Restaurant Management System</span>
+            <span>Good food brings people together.</span>
+        </footer>
+    </main>
 </div>
-
 </body>
 </html>

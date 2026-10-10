@@ -1,154 +1,292 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Restaurant Tables</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Table Management | Savora</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
-    <style>
+<style>
+:root {
+    --green: #116149;
+    --dark: #0b332c;
+    --bg: #f5f8f7;
+    --text: #17352e;
+    --muted: #77867f;
+    --border: #e5ece8;
+    --white: #fff;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); }
+a { text-decoration: none; color: inherit; }
 
-        *{
-            margin:0;
-            padding:0;
-            box-sizing:border-box;
-            font-family:Arial,sans-serif;
-        }
+.sidebar {
+    width: 235px; background: var(--dark); color: white; padding: 27px 15px;
+    position: fixed; inset: 0 auto 0 0; display: flex; flex-direction: column;
+    z-index: 5;
+}
+.brand { display: flex; align-items: center; gap: 11px; padding: 0 10px 36px; }
+.brand-icon { width: 42px; height: 42px; border-radius: 12px; background: #176d55; display: grid; place-items: center; font-size: 22px; }
+.brand h2 { font: 800 23px 'Manrope', sans-serif; }
+.brand p { font-size: 10px; color: #b7cec4; margin-top: 2px; }
+.nav-label { color: #78998b; font-size: 10px; letter-spacing: 1.5px; font-weight: 700; padding: 0 13px; margin-bottom: 12px; }
+.nav { display: grid; gap: 6px; }
+.nav a { display: flex; align-items: center; gap: 13px; padding: 13px 14px; border-radius: 10px; color: #d1e1d9; font-size: 13px; font-weight: 600; }
+.nav a:hover, .nav a.active { background: #205b49; color: white; }
+.nav-icon { width: 21px; text-align: center; font-size: 18px; }
+.sidebar-bottom { margin-top: auto; text-align: center; color: #a9c9b9; padding: 20px 10px; font: italic 16px/1.7 Georgia, serif; }
 
-        body{
-            background:#f4f6f9;
-            padding:40px;
-        }
+.main { margin-left: 235px; min-height: 100vh; }
+.topbar { height: 72px; background: white; border-bottom: 1px solid var(--border); padding: 0 34px; display: flex; align-items: center; justify-content: space-between; }
+.breadcrumb { font-size: 12px; color: var(--muted); }
+.breadcrumb strong { color: var(--text); }
+.admin { display: flex; align-items: center; gap: 10px; font-size: 12px; font-weight: 700; }
+.avatar { width: 35px; height: 35px; display: grid; place-items: center; background: var(--dark); color: white; border-radius: 50%; }
+.content { max-width: 1500px; padding: 32px 34px 45px; margin: auto; }
 
-        .container{
-            max-width:1200px;
-            margin:auto;
-        }
+.page-heading { display: flex; align-items: center; justify-content: space-between; gap: 18px; margin-bottom: 25px; }
+.eyebrow { color: var(--green); font-size: 10px; font-weight: 800; letter-spacing: 1.7px; text-transform: uppercase; margin-bottom: 8px; }
+h1 { font: 800 clamp(26px, 3vw, 34px) 'Manrope', sans-serif; letter-spacing: -1px; }
+.subtitle { color: var(--muted); font-size: 13px; margin-top: 8px; line-height: 1.7; }
+.button { display: inline-flex; align-items: center; justify-content: center; gap: 8px; border: 0; border-radius: 9px; padding: 12px 17px; background: var(--green); color: white; font-size: 12px; font-weight: 700; cursor: pointer; }
+.button:hover { background: #0c4b39; }
 
-        h1{
-            text-align:center;
-            margin-bottom:30px;
-            color:#2c3e50;
-        }
+.hero {
+    display: grid; grid-template-columns: 1.1fr .9fr; min-height: 215px;
+    background: var(--dark); border-radius: 16px; overflow: hidden; margin-bottom: 25px;
+}
+.hero-copy { padding: 30px; display: flex; flex-direction: column; justify-content: center; }
+.hero-copy .eyebrow { color: #a9ddc2; }
+.hero h2 { color: white; font: 800 25px/1.35 'Manrope', sans-serif; }
+.hero p { color: #d1e3da; font-size: 12px; line-height: 1.8; margin-top: 10px; max-width: 400px; }
+.hero-image { min-height: 215px; }
+.hero-image img { width: 100%; height: 100%; display: block; object-fit: cover; }
 
-        .table-grid{
-            display:grid;
-            grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
-            gap:20px;
-        }
+.stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; margin-bottom: 25px; }
+.stat { background: white; border: 1px solid var(--border); border-radius: 12px; padding: 19px; }
+.stat-label { color: var(--muted); font-size: 11px; font-weight: 600; }
+.stat-value { font: 800 27px 'Manrope', sans-serif; margin-top: 7px; }
+.stat-value.green { color: var(--green); }
+.stat-value.amber { color: #c28a30; }
+.stat-value.red { color: #bd4c4c; }
 
-        .table-card{
-            background:white;
-            border-radius:15px;
-            padding:25px;
-            box-shadow:0 4px 12px rgba(0,0,0,0.1);
-            transition:0.3s;
-            text-align:center;
-        }
+.section-heading { display: flex; justify-content: space-between; align-items: center; gap: 15px; margin-bottom: 17px; }
+.section-heading h2 { font: 800 19px 'Manrope', sans-serif; }
+.section-heading p { color: var(--muted); font-size: 11px; margin-top: 5px; }
+.toolbar { display: flex; align-items: center; justify-content: space-between; gap: 14px; margin-bottom: 18px; }
+.search { display: flex; align-items: center; gap: 10px; background: white; border: 1px solid var(--border); border-radius: 10px; padding: 11px 14px; max-width: 370px; width: 100%; }
+.search span { font-size: 17px; color: var(--muted); }
+.search input { border: 0; outline: 0; width: 100%; background: transparent; color: var(--text); font-size: 12px; }
+.result-count { font-size: 12px; color: var(--muted); white-space: nowrap; }
 
-        .table-card:hover{
-            transform:translateY(-5px);
-        }
+.table-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 17px; }
+.table-card { background: white; border: 1px solid var(--border); border-radius: 14px; overflow: hidden; transition: .2s; }
+.table-card:hover { transform: translateY(-3px); box-shadow: 0 10px 28px #17352e0d; }
+.table-visual { min-height: 135px; background: #e7eee9; position: relative; display: grid; place-items: center; overflow: hidden; }
+.table-visual img { position: absolute; width: 100%; height: 100%; object-fit: cover; opacity: .82; }
+.table-number { position: relative; z-index: 1; width: 65px; height: 65px; border-radius: 50%; display: grid; place-items: center; background: #ffffffed; color: var(--dark); font: 800 23px 'Manrope', sans-serif; box-shadow: 0 4px 18px #0b332c1c; }
+.table-body { padding: 17px; }
+.table-title-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.table-title { font: 800 15px 'Manrope', sans-serif; }
+.status { padding: 6px 9px; border-radius: 20px; font-size: 10px; font-weight: 700; white-space: nowrap; }
+.status.available { background: #e5f5ec; color: #167447; }
+.status.occupied { background: #fff0e5; color: #b96a22; }
+.table-details { display: flex; align-items: center; justify-content: space-between; gap: 8px; border-top: 1px solid #edf1ee; margin-top: 15px; padding-top: 13px; }
+.detail { color: var(--muted); font-size: 11px; }
+.detail strong { color: var(--text); font-size: 12px; }
+.table-action { display: inline-flex; justify-content: center; align-items: center; width: 100%; margin-top: 15px; padding: 10px; border-radius: 8px; background: #edf5f0; color: var(--green); font-size: 11px; font-weight: 700; }
+.table-action:hover { background: #dcece2; }
 
-        .table-number{
-            font-size:28px;
-            font-weight:bold;
-            color:#2c3e50;
-            margin-bottom:10px;
-        }
+.empty { background: white; border: 1px dashed #cbd9d1; border-radius: 14px; text-align: center; padding: 55px 20px; grid-column: 1 / -1; }
+.empty-icon { font-size: 38px; margin-bottom: 14px; }
+.empty h2 { font: 800 19px 'Manrope', sans-serif; }
+.empty p { color: var(--muted); font-size: 12px; margin-top: 8px; }
+.footer { padding: 25px 0 0; display: flex; justify-content: space-between; gap: 10px; color: #87968f; font-size: 10px; }
+.footer strong { color: #52695e; }
 
-        .capacity{
-            font-size:18px;
-            margin-bottom:15px;
-            color:#555;
-        }
-
-        .badge{
-            display:inline-block;
-            padding:8px 15px;
-            border-radius:20px;
-            font-weight:bold;
-        }
-
-        .available{
-            background:#d4edda;
-            color:#155724;
-        }
-
-        .occupied{
-            background:#f8d7da;
-            color:#721c24;
-        }
-
-        .navbar{
-            background:#2c3e50;
-            color:white;
-            padding:15px 30px;
-            margin-bottom:30px;
-
-            display:flex;
-            justify-content:space-between;
-            align-items:center;
-
-            border-radius:10px;
-        }
-
-        .nav-links a{
-            color:white;
-            text-decoration:none;
-            margin-left:20px;
-            font-weight:bold;
-        }
-
-        .nav-links a:hover{
-            text-decoration:underline;
-        }
-
-    </style>
-
+@media (max-width: 1150px) {
+    .table-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .content { padding: 26px 22px 35px; }
+}
+@media (max-width: 760px) {
+    .sidebar { width: 67px; padding: 20px 8px; }
+    .brand { justify-content: center; padding: 0 0 28px; }
+    .brand > div:last-child, .nav-label, .nav-text, .sidebar-bottom { display: none; }
+    .nav a { justify-content: center; padding: 13px 5px; }
+    .main { margin-left: 67px; }
+    .topbar { padding: 0 16px; }
+    .content { padding: 23px 16px 30px; }
+    .hero { grid-template-columns: 1fr; }
+    .hero-image { min-height: 150px; max-height: 180px; }
+    .hero-copy { padding: 24px; }
+    .stats { grid-template-columns: 1fr; gap: 10px; }
+}
+@media (max-width: 520px) {
+    .page-heading { align-items: flex-start; flex-direction: column; }
+    .table-grid { grid-template-columns: 1fr; }
+    .toolbar { align-items: flex-start; flex-direction: column; }
+    .search { max-width: none; }
+    .section-heading { align-items: flex-start; flex-direction: column; }
+    .footer { flex-direction: column; }
+}
+</style>
 </head>
+
 <body>
-<nav class="navbar">
-    <h2>🍽 Restaurant Management</h2>
+<aside class="sidebar">
+    <a href="{% url 'home' %}" class="brand">
+        <div class="brand-icon">✦</div>
+        <div><h2>Savora</h2><p>Restaurant Management</p></div>
+    </a>
+    <div class="nav-label">WORKSPACE</div>
+    <nav class="nav">
+        <a href="{% url 'home' %}"><span class="nav-icon">⌂</span><span class="nav-text">Dashboard</span></a>
+        <a href="{% url 'menu' %}"><span class="nav-icon">♨</span><span class="nav-text">Menu</span></a>
+        <a href="{% url 'table-list' %}" class="active"><span class="nav-icon">▤</span><span class="nav-text">Tables</span></a>
+        <a href="{% url 'create-reservation' %}"><span class="nav-icon">▦</span><span class="nav-text">Reservations</span></a>
+        <a href="{% url 'create-order' %}"><span class="nav-icon">🛒</span><span class="nav-text">New Order</span></a>
+        <a href="{% url 'order-list' %}"><span class="nav-icon">☷</span><span class="nav-text">Order History</span></a>
+    </nav>
+    <div class="sidebar-bottom">Good Food<br>Brings People<br>Together</div>
+</aside>
 
-    <div class="nav-links">
-        <a href="/menu/">Menu</a>
-        <a href="/tables/">Tables</a>
-    </div>
-</nav>
+<div class="main">
+    <header class="topbar">
+        <div class="breadcrumb"><a href="{% url 'home' %}">Dashboard</a> &nbsp; / &nbsp; <strong>Table Management</strong></div>
+        <div class="admin"><div class="avatar">A</div><span>Administrator</span></div>
+    </header>
 
-<div class="container">
+    <main class="content">
+        <section class="page-heading">
+            <div>
+                <div class="eyebrow">Seating overview</div>
+                <h1>Table Management</h1>
+                <p class="subtitle">View table capacity and availability before seating your guests.</p>
+            </div>
+            <a href="{% url 'create-reservation' %}" class="button">＋ Make a reservation</a>
+        </section>
 
-    <h1>🪑 Restaurant Tables</h1>
+        <section class="hero">
+            <div class="hero-copy">
+                <div class="eyebrow">A seat for every occasion</div>
+                <h2>Your dining room,<br>at a glance.</h2>
+                <p>Check available seating, review table capacities and help every guest find their place.</p>
+            </div>
+            <div class="hero-image">
+                <img src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?auto=format&fit=crop&w=1000&q=85" alt="Restaurant dining tables">
+            </div>
+        </section>
 
-    <div class="table-grid">
+        <section class="stats">
+            <div class="stat">
+                <div class="stat-label">Total tables</div>
+                <div class="stat-value">{{ tables|length }}</div>
+            </div>
+            <div class="stat">
+                <div class="stat-label">Available tables</div>
+                <div class="stat-value green" id="availableCount">
+                    {% with available=tables|dictsort:"is_available" %}
+                        {% for table in tables %}{% if table.is_available %}{{ forloop.counter0|add:1 }}{% endif %}{% endfor %}
+                    {% endwith %}
+                </div>
+            </div>
+            <div class="stat">
+                <div class="stat-label">Currently unavailable</div>
+                <div class="stat-value amber" id="unavailableCount">
+                    {% for table in tables %}{% if not table.is_available %}{{ forloop.counter0|add:1 }}{% endif %}{% endfor %}
+                </div>
+            </div>
+        </section>
 
-        {% for table in tables %}
-
-        <div class="table-card">
-
-            <div class="table-number">
-                Table {{ table.table_number }}
+        <section>
+            <div class="section-heading">
+                <div>
+                    <h2>All restaurant tables</h2>
+                    <p>Select a table when creating a reservation or order.</p>
+                </div>
             </div>
 
-            <div class="capacity">
-                Capacity: {{ table.capacity }} Persons
+            <div class="toolbar">
+                <label class="search">
+                    <span>⌕</span>
+                    <input type="search" id="tableSearch" placeholder="Search by table number or capacity...">
+                </label>
+                <div class="result-count"><span id="visibleCount">{{ tables|length }}</span> tables listed</div>
             </div>
 
-            {% if table.is_available %}
-                <span class="badge available">
-                    Available
-                </span>
-            {% else %}
-                <span class="badge occupied">
-                    Occupied
-                </span>
-            {% endif %}
+            <div class="table-grid" id="tableGrid">
+                {% for table in tables %}
+                <article class="table-card" data-number="{{ table.table_number }}" data-capacity="{{ table.capacity }}" data-status="{% if table.is_available %}available{% else %}unavailable{% endif %}">
+                    <div class="table-visual">
+                        <img src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=700&q=80" alt="Restaurant dining area" loading="lazy">
+                        <div class="table-number">{{ table.table_number }}</div>
+                    </div>
+                    <div class="table-body">
+                        <div class="table-title-row">
+                            <h3 class="table-title">Table {{ table.table_number }}</h3>
+                            {% if table.is_available %}
+                                <span class="status available">Available</span>
+                            {% else %}
+                                <span class="status occupied">Unavailable</span>
+                            {% endif %}
+                        </div>
+                        <div class="table-details">
+                            <div class="detail">Seating capacity<br><strong>{{ table.capacity }} guests</strong></div>
+                            <div class="detail">Table number<br><strong>#{{ table.table_number }}</strong></div>
+                        </div>
+                        {% if table.is_available %}
+                            <a class="table-action" href="{% url 'create-reservation' %}">Reserve a table →</a>
+                        {% else %}
+                            <span class="table-action" style="background:#f2f3f2;color:#78867f;">Currently unavailable</span>
+                        {% endif %}
+                    </div>
+                </article>
+                {% empty %}
+                <div class="empty">
+                    <div class="empty-icon">▤</div>
+                    <h2>No tables have been added</h2>
+                    <p>Add restaurant tables in the Django admin panel to manage seating here.</p>
+                </div>
+                {% endfor %}
+            </div>
 
-        </div>
+            <div class="empty" id="noResults" style="display:none;margin-top:15px;">
+                <div class="empty-icon">⌕</div>
+                <h2>No matching tables</h2>
+                <p>Try a different table number or capacity.</p>
+            </div>
+        </section>
 
-        {% endfor %}
-
-    </div>
-
+        <footer class="footer">
+            <span><strong>Savora</strong> · Restaurant Management System</span>
+            <span>Good food brings people together.</span>
+        </footer>
+    </main>
 </div>
 
+<script>
+const searchInput = document.getElementById("tableSearch");
+const tableCards = Array.from(document.querySelectorAll(".table-card"));
+const visibleCount = document.getElementById("visibleCount");
+const noResults = document.getElementById("noResults");
+
+function updateTableList() {
+    const query = searchInput.value.trim().toLowerCase();
+    let visible = 0;
+
+    tableCards.forEach(function(card) {
+        const number = (card.dataset.number || "").toLowerCase();
+        const capacity = (card.dataset.capacity || "").toLowerCase();
+        const matches = number.includes(query) || capacity.includes(query);
+        card.style.display = matches ? "" : "none";
+        if (matches) visible++;
+    });
+
+    visibleCount.textContent = visible;
+    noResults.style.display = visible === 0 && tableCards.length > 0 ? "block" : "none";
+}
+
+searchInput.addEventListener("input", updateTableList);
+</script>
 </body>
 </html>

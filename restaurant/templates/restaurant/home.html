@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Savora | Restaurant Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+:root {
+    --green: #116149;
+    --green-dark: #0b332c;
+    --green-light: #e9f5ef;
+    --bg: #f5f8f7;
+    --text: #17352e;
+    --muted: #71827b;
+    --border: #e5ece8;
+    --white: #ffffff;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); }
+a { color: inherit; text-decoration: none; }
+button, input { font: inherit; }
+
+.app { display: flex; min-height: 100vh; }
+
+.sidebar {
+    width: 245px;
+    flex-shrink: 0;
+    background: var(--green-dark);
+    color: #fff;
+    padding: 27px 15px 22px;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.brand { display: flex; align-items: center; gap: 11px; padding: 0 10px 35px; }
+.brand-icon {
+    width: 43px; height: 43px; border-radius: 13px;
+    display: grid; place-items: center; background: #176d55;
+    font-size: 23px;
+}
+.brand h2 { font: 800 23px 'Manrope', sans-serif; letter-spacing: -1px; }
+.brand p { color: #b7cec4; font-size: 10px; margin-top: 2px; }
+
+.nav-label {
+    color: #78998b; font-size: 10px; font-weight: 700;
+    letter-spacing: 1.5px; padding: 0 13px; margin-bottom: 12px;
+}
+.nav { display: grid; gap: 6px; }
+.nav a {
+    display: flex; align-items: center; gap: 13px;
+    padding: 13px 14px; border-radius: 10px;
+    font-size: 13px; font-weight: 600; color: #d1e1d9;
+    transition: .2s;
+}
+.nav a:hover, .nav a.active { background: #205b49; color: #fff; }
+.nav-icon { width: 21px; text-align: center; font-size: 18px; }
+.sidebar-bottom {
+    margin-top: auto; padding: 25px 13px 5px;
+    text-align: center; color: #a9c9b9;
+}
+.sidebar-bottom .leaf { font-size: 29px; margin-bottom: 8px; }
+.sidebar-bottom p { font: italic 16px/1.7 Georgia, serif; }
+.sidebar-bottom small { display: block; margin-top: 10px; color: #6e9a86; font-size: 10px; }
+
+.main-area { min-width: 0; flex: 1; }
+
+.topbar {
+    height: 73px; padding: 0 34px; background: #fff;
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: space-between; gap: 20px;
+}
+.search-box {
+    width: min(470px, 60%); display: flex; align-items: center; gap: 10px;
+    background: #f5f7f6; border: 1px solid #edf0ee;
+    padding: 11px 14px; border-radius: 12px; color: #82918a;
+}
+.search-box span { font-size: 19px; }
+.search-box input { width: 100%; border: 0; outline: 0; background: transparent; font-size: 12px; color: var(--text); }
+.admin { display: flex; align-items: center; gap: 12px; font-size: 12px; font-weight: 700; }
+.admin-avatar {
+    width: 36px; height: 36px; display: grid; place-items: center;
+    border-radius: 50%; background: var(--green-dark); color: white; font-size: 13px;
+}
+
+.content { max-width: 1600px; margin: auto; padding: 29px 34px 36px; }
+
+.hero {
+    display: grid; grid-template-columns: .88fr 1.35fr;
+    min-height: 224px; gap: 27px; align-items: center; margin-bottom: 25px;
+}
+.hero-copy { padding: 10px 0; }
+.eyebrow {
+    font-size: 10px; font-weight: 800; letter-spacing: 1.8px;
+    color: var(--green); text-transform: uppercase; margin-bottom: 12px;
+}
+.hero h1 {
+    font: 800 clamp(27px, 2.5vw, 37px)/1.2 'Manrope', sans-serif;
+    letter-spacing: -1.3px; max-width: 440px;
+}
+.hero-copy > p { color: var(--muted); font-size: 13px; line-height: 1.8; margin: 12px 0 18px; max-width: 410px; }
+.primary-btn {
+    display: inline-flex; align-items: center; gap: 12px;
+    background: var(--green); color: white; border-radius: 9px;
+    padding: 12px 17px; font-size: 12px; font-weight: 700; transition: .2s;
+}
+.primary-btn:hover { background: #0c4b39; transform: translateY(-1px); }
+
+.hero-image {
+    min-height: 224px; height: 100%; border-radius: 15px; overflow: hidden;
+    position: relative; background: #294438;
+}
+.hero-image img { width: 100%; height: 100%; min-height: 224px; position: absolute; inset: 0; object-fit: cover; }
+.hero-image::after {
+    content: ""; position: absolute; inset: 0;
+    background: linear-gradient(90deg, rgba(9,30,23,.05), rgba(9,30,23,.15) 40%, rgba(9,30,23,.58));
+}
+.hero-caption {
+    position: absolute; z-index: 1; right: 25px; bottom: 28px;
+    max-width: 230px; text-align: right; color: white;
+    font: italic 27px/1.25 Georgia, serif;
+    text-shadow: 0 2px 8px #0006;
+}
+
+.section-heading {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 15px; margin: 27px 0 15px;
+}
+.section-heading h2 { font: 800 17px 'Manrope', sans-serif; letter-spacing: -.4px; }
+.section-heading p { color: var(--muted); font-size: 11px; margin-top: 4px; }
+.section-link { font-size: 11px; font-weight: 700; color: var(--green); }
+
+.stats {
+    display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 15px;
+}
+.stat {
+    min-width: 0; border-radius: 13px; padding: 18px;
+    border: 1px solid var(--border); position: relative; overflow: hidden;
+}
+.stat-menu { background: #edf7f1; border-color: #d8ebe0; }
+.stat-tables { background: #edf4fd; border-color: #d9e7f9; }
+.stat-reservations { background: #fff5e9; border-color: #f6e6d0; }
+.stat-orders { background: #f5effc; border-color: #e9ddf8; }
+.stat-head { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+.stat-icon {
+    width: 35px; height: 35px; display: grid; place-items: center;
+    border-radius: 50%; color: white; font-size: 17px;
+}
+.stat-menu .stat-icon { background: #13805e; }
+.stat-tables .stat-icon { background: #287ac7; }
+.stat-reservations .stat-icon { background: #df8b19; }
+.stat-orders .stat-icon { background: #9364d2; }
+.stat h3 { font-size: 12px; margin-top: 15px; font-weight: 700; }
+.stat-number { font: 800 30px 'Manrope', sans-serif; margin-top: 6px; }
+.stat-subtitle { color: #647970; font-size: 11px; margin-top: 5px; }
+.stat-photo {
+    position: absolute; right: 9px; bottom: 10px; width: 87px; height: 75px;
+    object-fit: contain; opacity: .92; pointer-events: none;
+    filter: drop-shadow(0 5px 5px #18372b13);
+}
+.stat-number, .stat h3, .stat-subtitle, .stat-head { position: relative; z-index: 1; }
+.stat-menu .stat-photo { width: 88px; height: 72px; }
+
+.quick-grid {
+    display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 12px;
+}
+.quick-card {
+    display: flex; align-items: center; gap: 11px; min-width: 0;
+    padding: 15px 12px; background: white; border: 1px solid var(--border);
+    border-radius: 11px; transition: .2s;
+}
+.quick-card:hover { border-color: #a8cdbc; transform: translateY(-2px); box-shadow: 0 6px 18px #17352e0b; }
+.quick-icon {
+    width: 38px; height: 38px; border-radius: 50%; display: grid;
+    place-items: center; color: white; flex-shrink: 0; font-size: 17px;
+}
+.q-green { background: #137b5b; }
+.q-blue { background: #287ac7; }
+.q-orange { background: #df8b19; }
+.q-purple { background: #9364d2; }
+.quick-text { min-width: 0; }
+.quick-text h3 { font-size: 11px; font-weight: 700; line-height: 1.5; }
+.quick-text p { color: var(--muted); font-size: 10px; margin-top: 4px; line-height: 1.4; }
+.quick-arrow { margin-left: auto; align-self: flex-end; color: #87988f; font-size: 17px; }
+
+.bottom-grid {
+    display: grid; grid-template-columns: 1fr 1.08fr;
+    gap: 16px; margin-top: 24px;
+}
+.panel {
+    min-width: 0; background: white; border: 1px solid var(--border);
+    border-radius: 14px; padding: 23px;
+}
+.panel h2 { font: 800 16px 'Manrope', sans-serif; }
+.panel > p { font-size: 12px; line-height: 1.7; color: var(--muted); margin-top: 8px; }
+.operations-list { display: grid; gap: 0; margin-top: 15px; }
+.operation {
+    display: flex; align-items: center; gap: 12px;
+    padding: 12px 0; border-bottom: 1px solid #edf1ee;
+}
+.operation:last-child { border-bottom: 0; }
+.operation-icon {
+    width: 38px; height: 38px; border-radius: 10px;
+    display: grid; place-items: center; background: var(--green-light);
+    color: var(--green); font-size: 17px; flex-shrink: 0;
+}
+.operation-info { flex: 1; min-width: 0; }
+.operation-info h3 { font-size: 12px; font-weight: 700; }
+.operation-info p { font-size: 10px; color: var(--muted); margin-top: 4px; }
+.operation-link { font-size: 11px; font-weight: 700; color: var(--green); white-space: nowrap; }
+
+.promo {
+    background: #eaf5ee; position: relative; overflow: hidden;
+    display: flex; align-items: center; min-height: 315px;
+}
+.promo-copy { position: relative; z-index: 2; max-width: 64%; }
+.promo .eyebrow { font-size: 9px; margin-bottom: 11px; }
+.promo h2 { font-size: clamp(21px, 2vw, 29px); line-height: 1.2; letter-spacing: -.8px; }
+.promo > img {
+    position: absolute; width: 54%; height: 100%; right: -3%; bottom: 0;
+    object-fit: cover; object-position: center; mix-blend-mode: multiply;
+    mask-image: linear-gradient(90deg, transparent, black 34%);
+}
+.promo-points { display: flex; gap: 15px; margin: 20px 0; }
+.promo-point { font-size: 10px; line-height: 1.6; color: #4f7262; }
+.promo-point strong { display: block; color: var(--green-dark); font-size: 11px; }
+.promo .primary-btn { padding: 11px 14px; font-size: 11px; }
+
+.footer {
+    display: flex; justify-content: space-between; gap: 12px;
+    color: #87968f; font-size: 10px; padding: 22px 0 0;
+}
+.footer strong { color: #52695e; }
+
+@media (max-width: 1250px) {
+    .sidebar { width: 215px; }
+    .content { padding: 25px 23px 30px; }
+    .topbar { padding: 0 23px; }
+    .hero { grid-template-columns: .9fr 1.1fr; }
+    .quick-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .quick-card { padding: 13px; }
+}
+@media (max-width: 900px) {
+    .sidebar { width: 75px; padding: 22px 9px; }
+    .brand { justify-content: center; padding: 0 0 30px; }
+    .brand > div:last-child, .nav-label, .nav a .nav-text, .sidebar-bottom { display: none; }
+    .nav a { justify-content: center; padding: 14px 5px; }
+    .nav-icon { font-size: 20px; }
+    .hero { grid-template-columns: 1fr; }
+    .hero-image { min-height: 220px; }
+    .bottom-grid { grid-template-columns: 1fr; }
+}
+@media (max-width: 600px) {
+    .topbar { height: 63px; padding: 0 14px; }
+    .search-box { width: 100%; }
+    .admin { gap: 7px; }
+    .admin-label { display: none; }
+    .content { padding: 22px 14px 28px; }
+    .hero { gap: 17px; margin-bottom: 22px; }
+    .hero h1 { font-size: 29px; }
+    .hero-image { min-height: 185px; }
+    .hero-image img { min-height: 185px; }
+    .hero-caption { font-size: 23px; right: 16px; bottom: 17px; }
+    .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+    .stat { padding: 14px; }
+    .stat-photo { width: 66px; height: 60px; right: 4px; bottom: 8px; }
+    .stat-number { font-size: 27px; }
+    .quick-grid { grid-template-columns: 1fr; gap: 9px; }
+    .quick-card { padding: 13px; }
+    .quick-text h3 { font-size: 12px; }
+    .panel { padding: 18px; }
+    .promo { min-height: 300px; }
+    .promo-copy { max-width: 76%; }
+    .promo > img { width: 65%; right: -15%; opacity: .8; }
+    .promo-points { gap: 10px; flex-wrap: wrap; }
+    .footer { flex-direction: column; }
+}
+</style>
+</head>
+
+<body>
+<div class="app">
+
+    <aside class="sidebar">
+        <a href="{% url 'home' %}" class="brand">
+            <div class="brand-icon">✦</div>
+            <div>
+                <h2>Savora</h2>
+                <p>Restaurant Management</p>
+            </div>
+        </a>
+
+        <div class="nav-label">WORKSPACE</div>
+        <nav class="nav">
+            <a href="{% url 'home' %}" class="active">
+                <span class="nav-icon">⌂</span><span class="nav-text">Dashboard</span>
+            </a>
+            <a href="{% url 'menu' %}">
+                <span class="nav-icon">♨</span><span class="nav-text">Menu</span>
+            </a>
+            <a href="{% url 'table-list' %}">
+                <span class="nav-icon">▤</span><span class="nav-text">Tables</span>
+            </a>
+            <a href="{% url 'create-reservation' %}">
+                <span class="nav-icon">▦</span><span class="nav-text">Reservations</span>
+            </a>
+            <a href="{% url 'create-order' %}">
+                <span class="nav-icon">🛒</span><span class="nav-text">New Order</span>
+            </a>
+            <a href="{% url 'order-list' %}">
+                <span class="nav-icon">☷</span><span class="nav-text">Order History</span>
+            </a>
+        </nav>
+
+        <div class="sidebar-bottom">
+            <div class="leaf">❧</div>
+            <p>Good Food<br>Brings People<br>Together</p>
+            <small>MADE FOR GREAT SERVICE</small>
+        </div>
+    </aside>
+
+    <div class="main-area">
+        <header class="topbar">
+            <label class="search-box">
+                <span>⌕</span>
+                <input id="dashboardSearch" type="search" placeholder="Find a dashboard section...">
+            </label>
+            <div class="admin">
+                <span style="font-size:19px">♧</span>
+                <div class="admin-avatar">A</div>
+                <span class="admin-label">Administrator</span>
+            </div>
+        </header>
+
+        <main class="content">
+            <section class="hero">
+                <div class="hero-copy">
+                    <div class="eyebrow">Welcome to Savora</div>
+                    <h1>Manage your restaurant with ease.</h1>
+                    <p>Track orders, manage tables, handle reservations and keep your restaurant running smoothly.</p>
+                    <a class="primary-btn" href="{% url 'menu' %}">Explore menu <span>→</span></a>
+                </div>
+
+                <div class="hero-image">
+                    <img src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?auto=format&fit=crop&w=1400&q=85" alt="Elegant restaurant dining area">
+                    <div class="hero-caption">Great food.<br>Better moments.</div>
+                </div>
+            </section>
+
+            <section>
+                <div class="section-heading">
+                    <div>
+                        <h2>Restaurant overview</h2>
+                        <p>Your restaurant at a glance.</p>
+                    </div>
+                </div>
+
+                <div class="stats">
+                    <article class="stat stat-menu">
+                        <div class="stat-head">
+                            <div class="stat-icon">♨</div>
+                        </div>
+                        <h3>Menu Items</h3>
+                        <div class="stat-number">{{ menuItems|default:0 }}</div>
+                        <div class="stat-subtitle">Delicious choices</div>
+                        <img class="stat-photo" src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=250&q=80" alt="">
+                    </article>
+
+                    <article class="stat stat-tables">
+                        <div class="stat-head">
+                            <div class="stat-icon">▤</div>
+                        </div>
+                        <h3>Restaurant Tables</h3>
+                        <div class="stat-number">{{ tables|default:0 }}</div>
+                        <div class="stat-subtitle">Seating arrangements</div>
+                        <img class="stat-photo" src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=250&q=80" alt="">
+                    </article>
+
+                    <article class="stat stat-reservations">
+                        <div class="stat-head">
+                            <div class="stat-icon">▦</div>
+                        </div>
+                        <h3>Reservations</h3>
+                        <div class="stat-number">{{ reservations|default:0 }}</div>
+                        <div class="stat-subtitle">Customer bookings</div>
+                        <img class="stat-photo" src="https://images.unsplash.com/photo-1511795409834-ef04bbd61622?auto=format&fit=crop&w=250&q=80" alt="">
+                    </article>
+
+                    <article class="stat stat-orders">
+                        <div class="stat-head">
+                            <div class="stat-icon">☷</div>
+                        </div>
+                        <h3>Customer Orders</h3>
+                        <div class="stat-number">{{ orders|default:0 }}</div>
+                        <div class="stat-subtitle">Service and tracking</div>
+                        <img class="stat-photo" src="https://images.unsplash.com/photo-1498837167922-ddd27525d352?auto=format&fit=crop&w=250&q=80" alt="">
+                    </article>
+                </div>
+            </section>
+
+            <section>
+                <div class="section-heading">
+                    <div>
+                        <h2>Quick actions</h2>
+                        <p>Get to your most-used features faster.</p>
+                    </div>
+                    <a class="section-link" href="{% url 'order-list' %}">All orders →</a>
+                </div>
+
+                <div class="quick-grid">
+                    <a class="quick-card" href="{% url 'menu' %}">
+                        <div class="quick-icon q-green">♨</div>
+                        <div class="quick-text"><h3>Explore Menu</h3><p>View dishes and prices</p></div>
+                        <span class="quick-arrow">↗</span>
+                    </a>
+
+                    <a class="quick-card" href="{% url 'table-list' %}">
+                        <div class="quick-icon q-blue">▤</div>
+                        <div class="quick-text"><h3>Manage Tables</h3><p>Review table availability</p></div>
+                        <span class="quick-arrow">↗</span>
+                    </a>
+
+                    <a class="quick-card" href="{% url 'create-reservation' %}">
+                        <div class="quick-icon q-green">▦</div>
+                        <div class="quick-text"><h3>Make Reservation</h3><p>Book a table</p></div>
+                        <span class="quick-arrow">↗</span>
+                    </a>
+
+                    <a class="quick-card" href="{% url 'create-order' %}">
+                        <div class="quick-icon q-orange">🛒</div>
+                        <div class="quick-text"><h3>Create Order</h3><p>Place a new order</p></div>
+                        <span class="quick-arrow">↗</span>
+                    </a>
+
+                    <a class="quick-card" href="{% url 'order-list' %}">
+                        <div class="quick-icon q-purple">☷</div>
+                        <div class="quick-text"><h3>Order History</h3><p>Track and update orders</p></div>
+                        <span class="quick-arrow">↗</span>
+                    </a>
+                </div>
+            </section>
+
+            <section class="bottom-grid">
+                <article class="panel">
+                    <h2>Management shortcuts</h2>
+                    <p>Choose a section to continue managing daily restaurant operations.</p>
+
+                    <div class="operations-list">
+                        <a href="{% url 'menu' %}" class="operation">
+                            <div class="operation-icon">♨</div>
+                            <div class="operation-info">
+                                <h3>Menu management</h3>
+                                <p>Review menu items and pricing.</p>
+                            </div>
+                            <span class="operation-link">Open →</span>
+                        </a>
+
+                        <a href="{% url 'table-list' %}" class="operation">
+                            <div class="operation-icon">▤</div>
+                            <div class="operation-info">
+                                <h3>Table management</h3>
+                                <p>Check your restaurant's tables.</p>
+                            </div>
+                            <span class="operation-link">Open →</span>
+                        </a>
+
+                        <a href="{% url 'create-reservation' %}" class="operation">
+                            <div class="operation-icon">▦</div>
+                            <div class="operation-info">
+                                <h3>Reservation management</h3>
+                                <p>Record a new customer booking.</p>
+                            </div>
+                            <span class="operation-link">Open →</span>
+                        </a>
+
+                        <a href="{% url 'order-list' %}" class="operation">
+                            <div class="operation-icon">☷</div>
+                            <div class="operation-info">
+                                <h3>Order tracking</h3>
+                                <p>Review orders and their status.</p>
+                            </div>
+                            <span class="operation-link">Open →</span>
+                        </a>
+                    </div>
+                </article>
+
+                <article class="panel promo">
+                    <div class="promo-copy">
+                        <div class="eyebrow">Your restaurant, your standards</div>
+                        <h2>Delicious food.<br>Exceptional service.</h2>
+                        <p>Make every visit memorable with organized operations and a welcoming dining experience.</p>
+
+                        <div class="promo-points">
+                            <div class="promo-point"><strong>Fresh Ingredients</strong>Quality matters</div>
+                            <div class="promo-point"><strong>Happy Guests</strong>Service first</div>
+                            <div class="promo-point"><strong>Better Service</strong>Every day</div>
+                        </div>
+
+                        <a href="{% url 'menu' %}" class="primary-btn">Discover menu →</a>
+                    </div>
+                    <img src="https://images.unsplash.com/photo-1473093295043-cdd812d0e601?auto=format&fit=crop&w=700&q=85" alt="Freshly prepared restaurant dish">
+                </article>
+            </section>
+
+            <footer class="footer">
+                <span><strong>Savora</strong> · Restaurant Management System</span>
+                <span>Good food brings people together.</span>
+            </footer>
+        </main>
+    </div>
+</div>
+
+<script>
+const searchInput = document.getElementById("dashboardSearch");
+
+searchInput.addEventListener("input", function () {
+    const query = this.value.trim().toLowerCase();
+    const links = document.querySelectorAll(".nav a, .quick-card, .operation");
+
+    links.forEach(function (link) {
+        const matches = link.textContent.toLowerCase().includes(query);
+        link.style.display = (!query || matches) ? "" : "none";
+    });
+});
+</script>
+</body>
+</html>

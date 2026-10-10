@@ -1,0 +1,770 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order History | Savora</title>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --green: #174d3a;
+            --green-dark: #10392b;
+            --green-light: #eaf4ee;
+            --bg: #f6f7f5;
+            --white: #fff;
+            --text: #202923;
+            --muted: #78827b;
+            --border: #e8ece8;
+            --orange: #ed9a4b;
+            --red: #c94c4c;
+            --blue: #4778b5;
+            --shadow: 0 8px 28px rgba(25, 55, 39, .055);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+        }
+
+        button, input, select { font: inherit; }
+        button { cursor: pointer; }
+
+        .sidebar {
+            position: fixed;
+            inset: 0 auto 0 0;
+            width: 248px;
+            padding: 30px 18px;
+            background: var(--green-dark);
+            color: white;
+            display: flex;
+            flex-direction: column;
+            z-index: 20;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 11px;
+            padding: 0 12px;
+            margin-bottom: 42px;
+        }
+
+        .brand-icon {
+            width: 42px;
+            height: 42px;
+            border-radius: 14px;
+            display: grid;
+            place-items: center;
+            background: #d9eadf;
+            color: var(--green-dark);
+            font-size: 23px;
+        }
+
+        .brand-name {
+            font-family: 'Manrope', sans-serif;
+            font-size: 23px;
+            font-weight: 800;
+            letter-spacing: -.8px;
+        }
+
+        .brand-sub {
+            display: block;
+            color: #a9c3b5;
+            font-size: 10px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-top: 1px;
+        }
+
+        .nav-label {
+            color: #86a897;
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 1.7px;
+            padding: 0 13px;
+            margin-bottom: 12px;
+        }
+
+        .nav { display: grid; gap: 7px; }
+
+        .nav a {
+            display: flex;
+            align-items: center;
+            gap: 13px;
+            color: #c2d5ca;
+            text-decoration: none;
+            padding: 13px 14px;
+            border-radius: 11px;
+            font-size: 13px;
+            font-weight: 600;
+            transition: .2s ease;
+        }
+
+        .nav a:hover, .nav a.active {
+            background: rgba(255,255,255,.12);
+            color: #fff;
+        }
+
+        .nav a.active { box-shadow: inset 3px 0 #c3e1ce; }
+        .nav-icon { width: 20px; text-align: center; font-size: 17px; }
+
+        .sidebar-bottom {
+            margin-top: auto;
+            border-top: 1px solid rgba(255,255,255,.13);
+            padding: 20px 12px 0;
+            color: #a9c3b5;
+            font-size: 11px;
+            line-height: 1.7;
+        }
+
+        .main { margin-left: 248px; min-width: 0; }
+
+        .topbar {
+            height: 76px;
+            padding: 0 38px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: rgba(255,255,255,.92);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .breadcrumb { color: var(--muted); font-size: 12px; }
+        .breadcrumb strong { color: var(--text); }
+
+        .profile { display: flex; align-items: center; gap: 10px; }
+
+        .profile-avatar {
+            width: 37px;
+            height: 37px;
+            border-radius: 50%;
+            display: grid;
+            place-items: center;
+            background: var(--green-light);
+            color: var(--green);
+            font-weight: 800;
+        }
+
+        .profile-name { font-size: 12px; font-weight: 700; }
+        .profile-role { color: var(--muted); font-size: 10px; margin-top: 2px; }
+
+        .content { max-width: 1500px; margin: auto; padding: 32px 38px 45px; }
+
+        .hero {
+            position: relative;
+            min-height: 190px;
+            border-radius: 20px;
+            overflow: hidden;
+            padding: 30px 34px;
+            display: flex;
+            align-items: center;
+            background: #183b2d;
+            color: white;
+            margin-bottom: 28px;
+        }
+
+        .hero::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background:
+                linear-gradient(90deg, rgba(12,42,29,.96) 0%, rgba(12,42,29,.84) 44%, rgba(12,42,29,.15) 100%),
+                url("https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=1500&q=85") center/cover;
+        }
+
+        .hero-content { position: relative; z-index: 1; max-width: 570px; }
+
+        .eyebrow {
+            color: #c6e2d0;
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 12px;
+        }
+
+        h1 {
+            font-family: 'Manrope', sans-serif;
+            font-size: clamp(27px, 3vw, 35px);
+            letter-spacing: -1.1px;
+            line-height: 1.2;
+            margin-bottom: 10px;
+        }
+
+        .hero p { color: #d4e1d8; font-size: 13px; line-height: 1.8; max-width: 450px; }
+
+        .hero-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            border: 1px solid rgba(255,255,255,.3);
+            border-radius: 30px;
+            padding: 8px 12px;
+            margin-top: 16px;
+            color: #edf7f0;
+            font-size: 11px;
+        }
+
+        .hero-pill span {
+            width: 7px;
+            height: 7px;
+            background: #8cdb9e;
+            border-radius: 50%;
+        }
+
+        .section-heading {
+            display: flex;
+            align-items: end;
+            justify-content: space-between;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .section-heading h2 {
+            font-family: 'Manrope', sans-serif;
+            font-size: 22px;
+            letter-spacing: -.5px;
+        }
+
+        .section-heading p { color: var(--muted); font-size: 12px; margin-top: 5px; }
+
+        .primary-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            border: none;
+            background: var(--green);
+            color: white;
+            text-decoration: none;
+            border-radius: 10px;
+            padding: 12px 16px;
+            font-size: 12px;
+            font-weight: 700;
+            white-space: nowrap;
+            transition: .2s;
+        }
+
+        .primary-btn:hover { background: var(--green-dark); transform: translateY(-1px); }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 16px;
+            margin-bottom: 25px;
+        }
+
+        .stat-card {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 15px;
+            padding: 19px;
+            box-shadow: var(--shadow);
+            min-width: 0;
+        }
+
+        .stat-icon {
+            width: 45px;
+            height: 45px;
+            border-radius: 13px;
+            display: grid;
+            place-items: center;
+            flex-shrink: 0;
+            font-size: 20px;
+        }
+
+        .stat-icon.green { background: #eaf4ee; color: var(--green); }
+        .stat-icon.orange { background: #fff3e7; color: #b86d24; }
+        .stat-icon.blue { background: #edf3fb; color: #4778b5; }
+
+        .stat-label { color: var(--muted); font-size: 11px; margin-bottom: 6px; }
+        .stat-value { font-family: 'Manrope', sans-serif; font-size: 25px; font-weight: 800; line-height: 1.1; }
+
+        .table-panel {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 17px;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+        }
+
+        .panel-header {
+            padding: 22px 24px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .panel-header h3 { font-family: 'Manrope', sans-serif; font-size: 15px; font-weight: 800; }
+        .panel-header p { color: var(--muted); font-size: 11px; margin-top: 5px; }
+
+        .filter-row { display: flex; align-items: center; gap: 10px; }
+
+        .search {
+            width: 225px;
+            padding: 11px 13px;
+            border: 1px solid var(--border);
+            border-radius: 9px;
+            outline: none;
+            font-size: 11px;
+            background: #fbfcfb;
+        }
+
+        .search:focus, .status-filter:focus {
+            border-color: #8db6a0;
+            box-shadow: 0 0 0 3px rgba(23,77,58,.07);
+        }
+
+        .status-filter {
+            padding: 11px 12px;
+            border: 1px solid var(--border);
+            border-radius: 9px;
+            background: white;
+            outline: none;
+            color: var(--text);
+            font-size: 11px;
+        }
+
+        .table-scroll { overflow-x: auto; }
+
+        table { width: 100%; border-collapse: collapse; text-align: left; }
+
+        thead { background: #fafbfa; }
+
+        th {
+            padding: 14px 20px;
+            color: #859087;
+            font-size: 9px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            white-space: nowrap;
+        }
+
+        td {
+            padding: 17px 20px;
+            border-top: 1px solid #f0f2ef;
+            font-size: 12px;
+            vertical-align: middle;
+        }
+
+        tbody tr { transition: background .15s; }
+        tbody tr:hover { background: #fcfdfc; }
+
+        .order-id { color: var(--green); font-weight: 800; white-space: nowrap; }
+        .customer-name { font-weight: 700; }
+        .table-number { color: #56635a; font-size: 11px; }
+        .order-date { color: #4c574f; white-space: nowrap; }
+        .order-time { color: var(--muted); font-size: 10px; margin-top: 4px; }
+        .order-total { font-weight: 800; white-space: nowrap; }
+
+        .status {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 7px 10px;
+            border-radius: 30px;
+            font-size: 10px;
+            font-weight: 800;
+            white-space: nowrap;
+        }
+
+        .status::before {
+            content: "";
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: currentColor;
+        }
+
+        .status.pending { background: #fff3e5; color: #b77825; }
+        .status.in-progress { background: #edf3fb; color: #4778b5; }
+        .status.completed { background: #eaf4ee; color: #26734e; }
+        .status.cancelled { background: #fff0ef; color: #bf4a4a; }
+
+        .status-form { display: flex; align-items: center; gap: 7px; }
+
+        .status-select {
+            min-width: 115px;
+            max-width: 140px;
+            padding: 8px 7px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background: white;
+            font-size: 10px;
+            outline: none;
+        }
+
+        .update-btn {
+            border: none;
+            background: var(--green-light);
+            color: var(--green);
+            padding: 8px 10px;
+            border-radius: 8px;
+            font-size: 10px;
+            font-weight: 800;
+        }
+
+        .update-btn:hover { background: #dcebe1; }
+
+        .no-results {
+            display: none;
+            padding: 35px 15px;
+            text-align: center;
+            color: var(--muted);
+            font-size: 12px;
+        }
+
+        .empty-state { padding: 60px 20px; text-align: center; }
+
+        .empty-icon {
+            width: 65px;
+            height: 65px;
+            display: grid;
+            place-items: center;
+            margin: 0 auto 17px;
+            border-radius: 20px;
+            background: var(--green-light);
+            color: var(--green);
+            font-size: 27px;
+        }
+
+        .empty-state h3 { font-family: 'Manrope', sans-serif; font-size: 17px; margin-bottom: 8px; }
+        .empty-state p { color: var(--muted); font-size: 12px; margin-bottom: 20px; line-height: 1.7; }
+
+        .footer-note { color: var(--muted); font-size: 10px; margin-top: 18px; text-align: right; }
+
+        @media (max-width: 1200px) {
+            .content { padding-left: 25px; padding-right: 25px; }
+            .topbar { padding: 0 25px; }
+            .stats { gap: 10px; }
+            .stat-card { padding: 15px; }
+            .stat-value { font-size: 22px; }
+            th, td { padding-left: 14px; padding-right: 14px; }
+        }
+
+        @media (max-width: 1000px) {
+            .sidebar { width: 76px; padding: 24px 10px; }
+            .brand { justify-content: center; padding: 0; }
+            .brand-copy, .nav-label, .nav-text, .sidebar-bottom { display: none; }
+            .nav a { justify-content: center; padding: 14px 5px; }
+            .nav-icon { font-size: 19px; }
+            .main { margin-left: 76px; }
+            .panel-header { align-items: flex-start; flex-direction: column; }
+            .filter-row { width: 100%; }
+            .search { flex: 1; width: auto; }
+        }
+
+        @media (max-width: 700px) {
+            .stats { grid-template-columns: 1fr; }
+            .stat-card { padding: 14px 17px; }
+            .stat-value { font-size: 21px; }
+            .section-heading { align-items: flex-start; flex-direction: column; }
+            .filter-row { flex-direction: column; align-items: stretch; }
+            .search, .status-filter { width: 100%; }
+            .panel-header { padding: 17px; }
+            th, td { padding: 13px 14px; }
+        }
+
+        @media (max-width: 600px) {
+            .sidebar { width: 58px; padding: 18px 6px; }
+            .brand-icon { width: 36px; height: 36px; font-size: 19px; border-radius: 11px; }
+            .main { margin-left: 58px; }
+            .topbar { height: 62px; padding: 0 12px; }
+            .profile-name, .profile-role { display: none; }
+            .content { padding: 18px 11px 28px; }
+            .hero { min-height: 185px; padding: 22px 19px; border-radius: 15px; }
+            .hero::before {
+                background:
+                    linear-gradient(90deg, rgba(12,42,29,.96), rgba(12,42,29,.73)),
+                    url("https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=900&q=80") center/cover;
+            }
+            .hero p { font-size: 12px; }
+            .section-heading h2 { font-size: 19px; }
+            .primary-btn { padding: 11px 13px; }
+            .table-panel { border-radius: 13px; }
+            .footer-note { text-align: left; }
+        }
+    </style>
+</head>
+
+<body>
+<aside class="sidebar">
+    <div class="brand">
+        <div class="brand-icon">✦</div>
+        <div class="brand-copy">
+            <div class="brand-name">savora</div>
+            <span class="brand-sub">Restaurant suite</span>
+        </div>
+    </div>
+
+    <div class="nav-label">WORKSPACE</div>
+    <nav class="nav">
+        <a href="{% url 'home' %}">
+            <span class="nav-icon">⌂</span><span class="nav-text">Dashboard</span>
+        </a>
+        <a href="{% url 'menu' %}">
+            <span class="nav-icon">♨</span><span class="nav-text">Menu management</span>
+        </a>
+        <a href="{% url 'table-list' %}">
+            <span class="nav-icon">▦</span><span class="nav-text">Tables</span>
+        </a>
+        <a href="{% url 'create-reservation' %}">
+            <span class="nav-icon">▣</span><span class="nav-text">Reservations</span>
+        </a>
+        <a href="{% url 'create-order' %}">
+            <span class="nav-icon">＋</span><span class="nav-text">Create order</span>
+        </a>
+        <a href="{% url 'order-list' %}" class="active">
+            <span class="nav-icon">☷</span><span class="nav-text">Order history</span>
+        </a>
+    </nav>
+
+    <div class="sidebar-bottom">
+        <strong>SAVORA</strong><br>
+        Thoughtfully served.<br>
+        Restaurant management
+    </div>
+</aside>
+
+<main class="main">
+    <header class="topbar">
+        <div class="breadcrumb">Workspace&nbsp; / &nbsp;<strong>Order history</strong></div>
+        <div class="profile">
+            <div class="profile-avatar">S</div>
+            <div>
+                <div class="profile-name">Restaurant Staff</div>
+                <div class="profile-role">Order management</div>
+            </div>
+        </div>
+    </header>
+
+    <div class="content">
+        <section class="hero">
+            <div class="hero-content">
+                <div class="eyebrow">ORDERS & OPERATIONS</div>
+                <h1>Every order,<br>all in one place.</h1>
+                <p>Track restaurant orders, check their progress, and update order statuses from one organized workspace.</p>
+                <div class="hero-pill"><span></span> Order tracking workspace</div>
+            </div>
+        </section>
+
+        <div class="section-heading">
+            <div>
+                <h2>Order history</h2>
+                <p>Review past orders and manage their current status.</p>
+            </div>
+            <a href="{% url 'create-order' %}" class="primary-btn">＋ Create new order</a>
+        </div>
+
+        <section class="stats">
+            <div class="stat-card">
+                <div class="stat-icon green">☷</div>
+                <div>
+                    <div class="stat-label">Total orders</div>
+                    <div class="stat-value">{{ orders|length }}</div>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon orange">◷</div>
+                <div>
+                    <div class="stat-label">Pending orders</div>
+                    <div class="stat-value" id="pendingCount">0</div>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon blue">✓</div>
+                <div>
+                    <div class="stat-label">Completed orders</div>
+                    <div class="stat-value" id="completedCount">0</div>
+                </div>
+            </div>
+        </section>
+
+        <section class="table-panel">
+            <div class="panel-header">
+                <div>
+                    <h3>All orders</h3>
+                    <p>Search by order number, customer, table, or status.</p>
+                </div>
+
+                <div class="filter-row">
+                    <input type="search" class="search" id="orderSearch" placeholder="Search orders..." autocomplete="off">
+                    <select class="status-filter" id="statusFilter" aria-label="Filter by status">
+                        <option value="all">All statuses</option>
+                        <option value="pending">Pending</option>
+                        <option value="in progress">In Progress</option>
+                        <option value="completed">Completed</option>
+                        <option value="cancelled">Cancelled</option>
+                    </select>
+                </div>
+            </div>
+
+            {% if orders %}
+                <div class="table-scroll">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Order</th>
+                                <th>Customer</th>
+                                <th>Table</th>
+                                <th>Date & time</th>
+                                <th>Items</th>
+                                <th>Total</th>
+                                <th>Status</th>
+                                <th>Update status</th>
+                            </tr>
+                        </thead>
+
+                        <tbody id="ordersBody">
+                            {% for order in orders %}
+                                <tr class="order-row" data-status="{{ order.order_status|lower }}">
+                                    <td>
+                                        <span class="order-id">#ORD-{{ order.id|stringformat:"04d" }}</span>
+                                    </td>
+
+                                    <td>
+                                        <span class="customer-name">{{ order.customer_name }}</span>
+                                    </td>
+
+                                    <td>
+                                        <span class="table-number">Table {{ order.table.table_number }}</span>
+                                    </td>
+
+                                    <td>
+                                        <div class="order-date">{{ order.order_time|date:"d M Y" }}</div>
+                                        <div class="order-time">{{ order.order_time|date:"h:i A" }}</div>
+                                    </td>
+
+                                    <td>
+                                        <span>{{ order.items.count }} item{{ order.items.count|pluralize }}</span>
+                                    </td>
+
+                                    <td>
+                                        <span class="order-total">
+                                            ₹{% widthratio 1 1 0 %}{% with total=0 %}
+                                                {% for item in order.items.all %}
+                                                    {% if forloop.first %}{{ item.subtotal|floatformat:2 }}{% endif %}
+                                                {% endfor %}
+                                            {% endwith %}
+                                        </span>
+                                    </td>
+
+                                    <td>
+                                        <span class="status
+                                            {% if order.order_status == 'Pending' %}pending
+                                            {% elif order.order_status == 'In Progress' %}in-progress
+                                            {% elif order.order_status == 'Completed' %}completed
+                                            {% elif order.order_status == 'Cancelled' %}cancelled
+                                            {% endif %}">
+                                            {{ order.order_status }}
+                                        </span>
+                                    </td>
+
+                                    <td>
+                                        {% if order.order_status == 'Cancelled' or order.order_status == 'Completed' %}
+                                            <span style="color:#879189;font-size:10px;">No changes</span>
+                                        {% else %}
+                                            <form class="status-form" method="post" action="{% url 'update-order-status' order.id %}">
+                                                {% csrf_token %}
+                                                <select name="order_status" class="status-select" aria-label="New status for order {{ order.id }}">
+                                                    {% if order.order_status == 'Pending' %}
+                                                        <option value="Pending" selected>Pending</option>
+                                                        <option value="In Progress">In Progress</option>
+                                                        <option value="Completed">Completed</option>
+                                                        <option value="Cancelled">Cancelled</option>
+                                                    {% elif order.order_status == 'In Progress' %}
+                                                        <option value="In Progress" selected>In Progress</option>
+                                                        <option value="Completed">Completed</option>
+                                                        <option value="Cancelled">Cancelled</option>
+                                                    {% endif %}
+                                                </select>
+                                                <button type="submit" class="update-btn">Save</button>
+                                            </form>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="no-results" id="noResults">No orders match your search or selected filter.</div>
+            {% else %}
+                <div class="empty-state">
+                    <div class="empty-icon">☷</div>
+                    <h3>No orders yet</h3>
+                    <p>Your restaurant orders will appear here after the first order is created.</p>
+                    <a href="{% url 'create-order' %}" class="primary-btn">＋ Create your first order</a>
+                </div>
+            {% endif %}
+        </section>
+
+        <div class="footer-note">Savora Restaurant Management · Order history</div>
+    </div>
+</main>
+
+<script>
+    const rows = Array.from(document.querySelectorAll('.order-row'));
+    const searchInput = document.getElementById('orderSearch');
+    const statusFilter = document.getElementById('statusFilter');
+    const noResults = document.getElementById('noResults');
+
+    let pendingCount = 0;
+    let completedCount = 0;
+
+    rows.forEach(row => {
+        const status = row.dataset.status.trim().toLowerCase();
+
+        if (status === 'pending') pendingCount++;
+        if (status === 'completed') completedCount++;
+    });
+
+    document.getElementById('pendingCount').textContent = pendingCount;
+    document.getElementById('completedCount').textContent = completedCount;
+
+    function filterOrders() {
+        const query = searchInput.value.trim().toLowerCase();
+        const selectedStatus = statusFilter.value.toLowerCase();
+        let visibleCount = 0;
+
+        rows.forEach(row => {
+            const matchesSearch = row.textContent.toLowerCase().includes(query);
+            const rowStatus = row.dataset.status.trim().toLowerCase();
+            const matchesStatus = selectedStatus === 'all' || rowStatus === selectedStatus;
+
+            const visible = matchesSearch && matchesStatus;
+            row.style.display = visible ? '' : 'none';
+
+            if (visible) visibleCount++;
+        });
+
+        noResults.style.display = rows.length > 0 && visibleCount === 0 ? 'block' : 'none';
+    }
+
+    searchInput.addEventListener('input', filterOrders);
+    statusFilter.addEventListener('change', filterOrders);
+
+    document.querySelectorAll('.status-form').forEach(form => {
+        form.addEventListener('submit', event => {
+            const select = form.querySelector('select[name="order_status"]');
+            if (!select.value) {
+                event.preventDefault();
+                alert('Please select an order status.');
+            }
+        });
+    });
+</script>
+</body>
+</html>

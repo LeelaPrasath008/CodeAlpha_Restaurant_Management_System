@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Confirmed | Savora</title>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --green: #174d3a;
+            --green-dark: #10392b;
+            --green-light: #eaf4ee;
+            --bg: #f6f7f5;
+            --white: #fff;
+            --text: #202923;
+            --muted: #78827b;
+            --border: #e8ece8;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            position: fixed;
+            inset: 0 auto 0 0;
+            width: 248px;
+            padding: 30px 18px;
+            background: var(--green-dark);
+            color: white;
+            display: flex;
+            flex-direction: column;
+            z-index: 10;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 11px;
+            padding: 0 12px;
+            margin-bottom: 42px;
+        }
+
+        .brand-icon {
+            width: 42px;
+            height: 42px;
+            border-radius: 14px;
+            display: grid;
+            place-items: center;
+            background: #d9eadf;
+            color: var(--green-dark);
+            font-size: 23px;
+        }
+
+        .brand-name {
+            font-family: 'Manrope', sans-serif;
+            font-size: 23px;
+            font-weight: 800;
+            letter-spacing: -.8px;
+        }
+
+        .brand-sub {
+            display: block;
+            color: #a9c3b5;
+            font-size: 10px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-top: 1px;
+        }
+
+        .nav-label {
+            color: #86a897;
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 1.7px;
+            padding: 0 13px;
+            margin-bottom: 12px;
+        }
+
+        .nav { display: grid; gap: 7px; }
+
+        .nav a {
+            display: flex;
+            align-items: center;
+            gap: 13px;
+            color: #c2d5ca;
+            text-decoration: none;
+            padding: 13px 14px;
+            border-radius: 11px;
+            font-size: 13px;
+            font-weight: 600;
+            transition: .2s;
+        }
+
+        .nav a:hover, .nav a.active {
+            background: rgba(255,255,255,.12);
+            color: white;
+        }
+
+        .nav a.active { box-shadow: inset 3px 0 #c3e1ce; }
+        .nav-icon { width: 20px; text-align: center; font-size: 17px; }
+
+        .sidebar-bottom {
+            margin-top: auto;
+            border-top: 1px solid rgba(255,255,255,.13);
+            padding: 20px 12px 0;
+            color: #a9c3b5;
+            font-size: 11px;
+            line-height: 1.7;
+        }
+
+        .main { margin-left: 248px; min-height: 100vh; }
+
+        .topbar {
+            height: 76px;
+            padding: 0 38px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: white;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .breadcrumb { color: var(--muted); font-size: 12px; }
+        .breadcrumb strong { color: var(--text); }
+
+        .profile { display: flex; align-items: center; gap: 10px; }
+        .profile-avatar {
+            width: 37px;
+            height: 37px;
+            border-radius: 50%;
+            display: grid;
+            place-items: center;
+            background: var(--green-light);
+            color: var(--green);
+            font-weight: 800;
+        }
+
+        .profile-name { font-size: 12px; font-weight: 700; }
+        .profile-role { color: var(--muted); font-size: 10px; margin-top: 2px; }
+
+        .content {
+            min-height: calc(100vh - 76px);
+            padding: 35px;
+            display: grid;
+            place-items: center;
+        }
+
+        .success-layout {
+            width: 100%;
+            max-width: 1020px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            align-items: stretch;
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 23px;
+            overflow: hidden;
+            box-shadow: 0 15px 50px rgba(25,55,39,.07);
+        }
+
+        .success-visual {
+            position: relative;
+            min-height: 540px;
+            padding: 34px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            color: white;
+            background: var(--green-dark);
+            overflow: hidden;
+        }
+
+        .success-visual::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background:
+                linear-gradient(180deg, rgba(11,42,29,.48), rgba(11,42,29,.92)),
+                url("https://images.unsplash.com/photo-1414235077428-338989a2e8c0?auto=format&fit=crop&w=1000&q=85") center/cover;
+        }
+
+        .visual-top, .visual-bottom { position: relative; z-index: 1; }
+
+        .brand-small {
+            display: inline-flex;
+            align-items: center;
+            gap: 9px;
+            font-family: 'Manrope', sans-serif;
+            font-size: 20px;
+            font-weight: 800;
+        }
+
+        .brand-small span {
+            display: grid;
+            place-items: center;
+            width: 35px;
+            height: 35px;
+            background: #d9eadf;
+            color: var(--green-dark);
+            border-radius: 11px;
+        }
+
+        .visual-bottom .eyebrow {
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            color: #c6e2d0;
+            margin-bottom: 13px;
+        }
+
+        .visual-bottom h2 {
+            font-family: 'Manrope', sans-serif;
+            font-size: clamp(28px, 3vw, 38px);
+            line-height: 1.2;
+            letter-spacing: -1px;
+            margin-bottom: 12px;
+        }
+
+        .visual-bottom p {
+            color: #e0e9e2;
+            font-size: 12px;
+            line-height: 1.9;
+            max-width: 310px;
+        }
+
+        .success-content {
+            padding: 42px 35px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .success-icon {
+            width: 69px;
+            height: 69px;
+            display: grid;
+            place-items: center;
+            border-radius: 22px;
+            background: var(--green-light);
+            color: var(--green);
+            font-size: 32px;
+            margin-bottom: 24px;
+        }
+
+        .eyebrow {
+            color: var(--green);
+            font-size: 10px;
+            font-weight: 800;
+            letter-spacing: 1.8px;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+        }
+
+        h1 {
+            font-family: 'Manrope', sans-serif;
+            font-size: clamp(26px, 3vw, 34px);
+            letter-spacing: -1px;
+            line-height: 1.2;
+            margin-bottom: 13px;
+        }
+
+        .description {
+            color: var(--muted);
+            font-size: 13px;
+            line-height: 1.8;
+            margin-bottom: 27px;
+        }
+
+        .confirmation-card {
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 19px;
+            margin-bottom: 25px;
+            background: #fcfdfc;
+        }
+
+        .confirmation-heading {
+            font-size: 10px;
+            color: var(--muted);
+            text-transform: uppercase;
+            font-weight: 800;
+            letter-spacing: 1.2px;
+            margin-bottom: 14px;
+        }
+
+        .detail-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 10px 0;
+            border-bottom: 1px solid #edf0ed;
+            font-size: 12px;
+        }
+
+        .detail-row:last-child { border-bottom: 0; padding-bottom: 0; }
+        .detail-label { color: var(--muted); }
+        .detail-value { font-weight: 700; text-align: right; overflow-wrap: anywhere; }
+
+        .status-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            border-radius: 30px;
+            padding: 6px 9px;
+            background: #fff3e5;
+            color: #a76a20;
+            font-size: 10px;
+            font-weight: 800;
+        }
+
+        .status-pill::before {
+            content: "";
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: currentColor;
+        }
+
+        .actions { display: grid; gap: 10px; }
+
+        .btn {
+            width: 100%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            border-radius: 10px;
+            padding: 13px 15px;
+            text-decoration: none;
+            font-size: 12px;
+            font-weight: 800;
+            transition: .2s;
+        }
+
+        .btn-primary { background: var(--green); color: white; border: 1px solid var(--green); }
+        .btn-primary:hover { background: var(--green-dark); }
+        .btn-secondary { background: white; color: var(--green); border: 1px solid var(--border); }
+        .btn-secondary:hover { background: #f7faf7; }
+
+        .bottom-note {
+            color: var(--muted);
+            font-size: 10px;
+            line-height: 1.7;
+            margin-top: 22px;
+            text-align: center;
+        }
+
+        @media (max-width: 1000px) {
+            .sidebar { width: 76px; padding: 24px 10px; }
+            .brand { justify-content: center; padding: 0; }
+            .brand-copy, .nav-label, .nav-text, .sidebar-bottom { display: none; }
+            .nav a { justify-content: center; padding: 14px 5px; }
+            .nav-icon { font-size: 19px; }
+            .main { margin-left: 76px; }
+            .content { padding: 24px; }
+            .success-content { padding: 30px 25px; }
+            .success-visual { padding: 27px; }
+        }
+
+        @media (max-width: 680px) {
+            .success-layout { grid-template-columns: 1fr; max-width: 470px; }
+            .success-visual { min-height: 230px; padding: 22px; }
+            .visual-bottom h2 { font-size: 27px; }
+            .visual-bottom p { display: none; }
+            .success-content { padding: 29px 23px; }
+        }
+
+        @media (max-width: 480px) {
+            .sidebar { width: 58px; padding: 18px 6px; }
+            .brand-icon { width: 36px; height: 36px; font-size: 19px; border-radius: 11px; }
+            .main { margin-left: 58px; }
+            .topbar { height: 62px; padding: 0 12px; }
+            .profile-name, .profile-role { display: none; }
+            .content { min-height: calc(100vh - 62px); padding: 15px 10px; }
+            .success-layout { border-radius: 16px; }
+            .success-content { padding: 23px 17px; }
+            .success-visual { min-height: 205px; }
+            h1 { font-size: 27px; }
+        }
+    </style>
+</head>
+
+<body>
+<aside class="sidebar">
+    <div class="brand">
+        <div class="brand-icon">✦</div>
+        <div class="brand-copy">
+            <div class="brand-name">savora</div>
+            <span class="brand-sub">Restaurant suite</span>
+        </div>
+    </div>
+
+    <div class="nav-label">WORKSPACE</div>
+    <nav class="nav">
+        <a href="{% url 'home' %}">
+            <span class="nav-icon">⌂</span><span class="nav-text">Dashboard</span>
+        </a>
+        <a href="{% url 'menu' %}">
+            <span class="nav-icon">♨</span><span class="nav-text">Menu management</span>
+        </a>
+        <a href="{% url 'table-list' %}">
+            <span class="nav-icon">▦</span><span class="nav-text">Tables</span>
+        </a>
+        <a href="{% url 'create-reservation' %}">
+            <span class="nav-icon">▣</span><span class="nav-text">Reservations</span>
+        </a>
+        <a href="{% url 'create-order' %}" class="active">
+            <span class="nav-icon">＋</span><span class="nav-text">Create order</span>
+        </a>
+        <a href="{% url 'order-list' %}">
+            <span class="nav-icon">☷</span><span class="nav-text">Order history</span>
+        </a>
+    </nav>
+
+    <div class="sidebar-bottom">
+        <strong>SAVORA</strong><br>
+        Thoughtfully served.<br>
+        Restaurant management
+    </div>
+</aside>
+
+<main class="main">
+    <header class="topbar">
+        <div class="breadcrumb">Workspace&nbsp; / &nbsp;<strong>Order confirmed</strong></div>
+        <div class="profile">
+            <div class="profile-avatar">S</div>
+            <div>
+                <div class="profile-name">Restaurant Staff</div>
+                <div class="profile-role">Order management</div>
+            </div>
+        </div>
+    </header>
+
+    <div class="content">
+        <section class="success-layout">
+            <div class="success-visual">
+                <div class="visual-top">
+                    <div class="brand-small"><span>✦</span> savora</div>
+                </div>
+
+                <div class="visual-bottom">
+                    <div class="eyebrow">MADE WITH CARE</div>
+                    <h2>Good food.<br>Good moments.</h2>
+                    <p>Thank you for choosing Savora. Every great dining experience begins with thoughtful service.</p>
+                </div>
+            </div>
+
+            <div class="success-content">
+                <div class="success-icon">✓</div>
+                <div class="eyebrow">ORDER CREATED</div>
+                <h1>Order placed<br>successfully!</h1>
+                <p class="description">
+                    Your order has been recorded. You can review its details and track its progress in order history.
+                </p>
+
+                <div class="confirmation-card">
+                    <div class="confirmation-heading">Order confirmation</div>
+
+                    {% if order %}
+                        <div class="detail-row">
+                            <span class="detail-label">Order reference</span>
+                            <span class="detail-value">#ORD-{{ order.id|stringformat:"04d" }}</span>
+                        </div>
+
+                        <div class="detail-row">
+                            <span class="detail-label">Customer</span>
+                            <span class="detail-value">{{ order.customer_name }}</span>
+                        </div>
+
+                        <div class="detail-row">
+                            <span class="detail-label">Table</span>
+                            <span class="detail-value">Table {{ order.table.table_number }}</span>
+                        </div>
+
+                        <div class="detail-row">
+                            <span class="detail-label">Date</span>
+                            <span class="detail-value">{{ order.order_time|date:"d M Y, h:i A" }}</span>
+                        </div>
+
+                        <div class="detail-row">
+                            <span class="detail-label">Current status</span>
+                            <span class="status-pill">{{ order.order_status }}</span>
+                        </div>
+                    {% else %}
+                        <div class="detail-row">
+                            <span class="detail-label">Confirmation</span>
+                            <span class="detail-value">Order recorded</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">Next step</span>
+                            <span class="detail-value">View order history</span>
+                        </div>
+                    {% endif %}
+                </div>
+
+                <div class="actions">
+                    <a href="{% url 'order-list' %}" class="btn btn-primary">
+                        View order history&nbsp; →
+                    </a>
+                    <a href="{% url 'create-order' %}" class="btn btn-secondary">
+                        ＋ Create another order
+                    </a>
+                    <a href="{% url 'home' %}" class="btn btn-secondary">
+                        Back to dashboard
+                    </a>
+                </div>
+
+                <div class="bottom-note">
+                    Please verify the order details before proceeding with service.
+                </div>
+            </div>
+        </section>
+    </div>
+</main>
+</body>
+</html>

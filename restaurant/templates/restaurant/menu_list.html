@@ -1,164 +1,1074 @@
 <!DOCTYPE html>
-<html>
+
+<html lang="en">
 <head>
-    <title>Restaurant Menu</title>
-    <style>
-        *{
-            margin:0;
-            padding:0;
-            box-sizing:border-box;
-            font-family: Arial, sans-serif;
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Menu Management | Savora</title>
+
+```
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+    :root {
+        --green: #116149;
+        --green-dark: #0b332c;
+        --background: #f5f8f7;
+        --text: #17352e;
+        --muted: #77867f;
+        --border: #e5ece8;
+        --white: #ffffff;
+    }
+
+    * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+    }
+
+    body {
+        font-family: "DM Sans", sans-serif;
+        background: var(--background);
+        color: var(--text);
+    }
+
+    a {
+        color: inherit;
+        text-decoration: none;
+    }
+
+    button,
+    input {
+        font: inherit;
+    }
+
+    /* Sidebar */
+
+    .sidebar {
+        position: fixed;
+        inset: 0 auto 0 0;
+        z-index: 10;
+        display: flex;
+        flex-direction: column;
+        width: 235px;
+        padding: 27px 15px;
+        background: var(--green-dark);
+        color: white;
+    }
+
+    .brand {
+        display: flex;
+        align-items: center;
+        gap: 11px;
+        padding: 0 10px 36px;
+    }
+
+    .brand-icon {
+        display: grid;
+        place-items: center;
+        flex-shrink: 0;
+        width: 42px;
+        height: 42px;
+        border-radius: 12px;
+        background: #176d55;
+        font-size: 22px;
+    }
+
+    .brand h2 {
+        font: 800 23px "Manrope", sans-serif;
+    }
+
+    .brand p {
+        margin-top: 2px;
+        color: #b7cec4;
+        font-size: 10px;
+    }
+
+    .nav-label {
+        margin-bottom: 12px;
+        padding: 0 13px;
+        color: #91b3a4;
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 1.5px;
+    }
+
+    .nav {
+        display: grid;
+        gap: 6px;
+    }
+
+    .nav a {
+        display: flex;
+        align-items: center;
+        gap: 13px;
+        padding: 13px 14px;
+        border-radius: 10px;
+        color: #d1e1d9;
+        font-size: 13px;
+        font-weight: 600;
+        transition: background 0.2s ease;
+    }
+
+    .nav a:hover,
+    .nav a.active {
+        background: #205b49;
+        color: white;
+    }
+
+    .nav-icon {
+        width: 21px;
+        flex-shrink: 0;
+        text-align: center;
+        font-size: 18px;
+    }
+
+    .sidebar-bottom {
+        margin-top: auto;
+        padding: 20px 10px;
+        color: #a9c9b9;
+        text-align: center;
+        font: italic 16px/1.7 Georgia, serif;
+    }
+
+    /* Main layout */
+
+    .main {
+        min-height: 100vh;
+        margin-left: 235px;
+    }
+
+    .topbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        min-height: 72px;
+        gap: 15px;
+        padding: 14px 34px;
+        border-bottom: 1px solid var(--border);
+        background: var(--white);
+    }
+
+    .breadcrumb {
+        color: var(--muted);
+        font-size: 12px;
+    }
+
+    .breadcrumb strong {
+        color: var(--text);
+    }
+
+    .admin {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 12px;
+        font-weight: 700;
+        white-space: nowrap;
+    }
+
+    .avatar {
+        display: grid;
+        place-items: center;
+        width: 35px;
+        height: 35px;
+        border-radius: 50%;
+        background: var(--green-dark);
+        color: white;
+    }
+
+    .content {
+        width: 100%;
+        max-width: 1500px;
+        margin: 0 auto;
+        padding: 32px 34px 45px;
+    }
+
+    .page-heading {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 18px;
+        margin-bottom: 25px;
+    }
+
+    .eyebrow {
+        margin-bottom: 8px;
+        color: var(--green);
+        font-size: 10px;
+        font-weight: 800;
+        letter-spacing: 1.7px;
+        text-transform: uppercase;
+    }
+
+    h1 {
+        font: 800 clamp(26px, 3vw, 34px)/1.2 "Manrope", sans-serif;
+        letter-spacing: -1px;
+    }
+
+    .subtitle {
+        margin-top: 8px;
+        color: var(--muted);
+        font-size: 13px;
+        line-height: 1.7;
+    }
+
+    .button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        flex-shrink: 0;
+        padding: 12px 17px;
+        border: 0;
+        border-radius: 9px;
+        background: var(--green);
+        color: white;
+        font-size: 12px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: background 0.2s ease;
+    }
+
+    .button:hover {
+        background: #0c4b39;
+    }
+
+    /* Banner */
+
+    .banner {
+        position: relative;
+        display: flex;
+        align-items: center;
+        min-height: 190px;
+        overflow: hidden;
+        margin-bottom: 26px;
+        padding: 28px 30px;
+        border-radius: 15px;
+        background: #123d31;
+        color: white;
+        isolation: isolate;
+    }
+
+    .banner-copy {
+        position: relative;
+        z-index: 2;
+        max-width: 60%;
+    }
+
+    .banner h2 {
+        font: 800 25px/1.35 "Manrope", sans-serif;
+    }
+
+    .banner p {
+        margin-top: 9px;
+        color: #d1e3da;
+        font-size: 12px;
+        line-height: 1.8;
+    }
+
+    .banner img {
+        position: absolute;
+        z-index: 1;
+        inset: 0 0 0 auto;
+        width: 48%;
+        height: 100%;
+        object-fit: cover;
+        opacity: 0.72;
+        -webkit-mask-image: linear-gradient(to right, transparent, black 48%);
+        mask-image: linear-gradient(to right, transparent, black 48%);
+    }
+
+    /* Search */
+
+    .toolbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 14px;
+        margin-bottom: 20px;
+    }
+
+    .search {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        width: 100%;
+        max-width: 420px;
+        padding: 12px 14px;
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        background: white;
+    }
+
+    .search span {
+        color: var(--muted);
+        font-size: 19px;
+    }
+
+    .search input {
+        width: 100%;
+        min-width: 0;
+        border: 0;
+        outline: none;
+        background: transparent;
+        color: var(--text);
+        font-size: 12px;
+    }
+
+    .search:focus-within {
+        border-color: #8bb9a4;
+        box-shadow: 0 0 0 3px #11614912;
+    }
+
+    .result-count {
+        color: var(--muted);
+        font-size: 12px;
+        white-space: nowrap;
+    }
+
+    /* Menu cards */
+
+    .menu-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        align-items: stretch;
+        gap: 20px;
+    }
+
+    .menu-card {
+        min-width: 0;
+        overflow: hidden;
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        background: white;
+        transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+    }
+
+    .menu-card:hover {
+        transform: translateY(-3px);
+        border-color: #c9ded2;
+        box-shadow: 0 10px 28px #17352e0d;
+    }
+
+    .food-image {
+        position: relative;
+        height: 190px;
+        overflow: hidden;
+        background: #e7eee9;
+    }
+
+    .food-image img {
+        display: block;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.35s ease;
+    }
+
+    .menu-card:hover .food-image img {
+        transform: scale(1.04);
+    }
+
+    .category-tag {
+        position: absolute;
+        top: 13px;
+        left: 13px;
+        max-width: calc(100% - 26px);
+        overflow: hidden;
+        padding: 7px 10px;
+        border-radius: 7px;
+        background: #ffffffed;
+        color: var(--green);
+        font-size: 10px;
+        font-weight: 700;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .menu-body {
+        display: flex;
+        flex-direction: column;
+        min-height: 178px;
+        padding: 17px;
+    }
+
+    .item-top {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 10px;
+    }
+
+    .item-name {
+        min-width: 0;
+        overflow-wrap: anywhere;
+        font: 800 15px/1.5 "Manrope", sans-serif;
+    }
+
+    .price {
+        flex-shrink: 0;
+        color: var(--green);
+        font: 800 16px/1.5 "Manrope", sans-serif;
+        white-space: nowrap;
+    }
+
+    .item-description {
+        min-height: 38px;
+        margin-top: 8px;
+        color: var(--muted);
+        font-size: 11px;
+        line-height: 1.7;
+    }
+
+    .item-bottom {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: auto;
+        padding-top: 13px;
+        border-top: 1px solid #edf1ee;
+    }
+
+    .stock {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        color: #5d7669;
+        font-size: 10px;
+        font-weight: 700;
+    }
+
+    .stock-dot {
+        width: 7px;
+        height: 7px;
+        flex-shrink: 0;
+        border-radius: 50%;
+        background: #21a36f;
+    }
+
+    .stock.low {
+        color: #bd7927;
+    }
+
+    .stock.low .stock-dot {
+        background: #e7a23e;
+    }
+
+    .stock.out {
+        color: #bf4e4e;
+    }
+
+    .stock.out .stock-dot {
+        background: #d95353;
+    }
+
+    .item-id {
+        color: #94a098;
+        font-size: 10px;
+    }
+
+    /* Empty states */
+
+    .empty {
+        grid-column: 1 / -1;
+        padding: 55px 20px;
+        border: 1px dashed #cbd9d1;
+        border-radius: 14px;
+        background: white;
+        text-align: center;
+    }
+
+    .empty-icon {
+        margin-bottom: 14px;
+        font-size: 38px;
+    }
+
+    .empty h2 {
+        font: 800 19px "Manrope", sans-serif;
+    }
+
+    .empty p {
+        margin-top: 8px;
+        color: var(--muted);
+        font-size: 12px;
+        line-height: 1.7;
+    }
+
+    .footer {
+        display: flex;
+        justify-content: space-between;
+        gap: 10px;
+        padding-top: 25px;
+        color: #87968f;
+        font-size: 10px;
+    }
+
+    .footer strong {
+        color: #52695e;
+    }
+
+    /* Responsive layout */
+
+    @media (max-width: 1200px) {
+        .menu-grid {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
         }
 
-        body{
-            background:#f4f6f9;
-            padding:40px;
+        .content {
+            padding-right: 24px;
+            padding-left: 24px;
         }
 
-        .container{
-            max-width:1200px;
-            margin:auto;
+        .topbar {
+            padding-right: 24px;
+            padding-left: 24px;
+        }
+    }
+
+    @media (max-width: 760px) {
+        .sidebar {
+            width: 67px;
+            padding: 20px 8px;
         }
 
-        h1{
-            text-align:center;
-            margin-bottom:30px;
-            color:#333;
+        .brand {
+            justify-content: center;
+            padding: 0 0 28px;
         }
 
-        .menu-grid{
-            display:grid;
-            grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
-            gap:20px;
+        .brand > div:last-child,
+        .nav-label,
+        .nav-text,
+        .sidebar-bottom {
+            display: none;
         }
 
-        .card{
-            background:white;
-            border-radius:15px;
-            padding:20px;
-            box-shadow:0 4px 10px rgba(0,0,0,0.1);
-            transition:0.3s;
+        .nav a {
+            justify-content: center;
+            padding: 13px 5px;
         }
 
-        .card:hover{
-            transform:translateY(-5px);
+        .nav-icon {
+            font-size: 20px;
         }
 
-        .item-name{
-            font-size:22px;
-            font-weight:bold;
-            color:#2c3e50;
-            margin-bottom:10px;
+        .main {
+            margin-left: 67px;
         }
 
-        .category{
-            display:inline-block;
-            background:#e8f4ff;
-            color:#0077cc;
-            padding:5px 10px;
-            border-radius:20px;
-            font-size:14px;
-            margin-bottom:10px;
+        .topbar {
+            padding: 13px 16px;
         }
 
-        .price{
-            font-size:24px;
-            color:#27ae60;
-            font-weight:bold;
-            margin:10px 0;
+        .content {
+            padding: 23px 16px 30px;
         }
 
-        .stock{
-            color:#666;
+        .banner {
+            min-height: 175px;
+            padding: 22px;
         }
 
-        .available{
-            color:green;
-            font-weight:bold;
+        .banner h2 {
+            font-size: 21px;
         }
 
-        .low-stock{
-            color:red;
-            font-weight:bold;
+        .food-image {
+            height: 165px;
         }
-        .navbar{
-            background:#2c3e50;
-            color:white;
-            padding:15px 30px;
-            margin-bottom:30px;
+    }
 
-            display:flex;
-            justify-content:space-between;
-            align-items:center;
-
-            border-radius:10px;
+    @media (max-width: 520px) {
+        .page-heading {
+            align-items: flex-start;
+            flex-direction: column;
         }
 
-        .nav-links a{
-            color:white;
-            text-decoration:none;
-            margin-left:20px;
-            font-weight:bold;
+        .menu-grid {
+            grid-template-columns: 1fr;
         }
 
-        .nav-links a:hover{
-            text-decoration:underline;
+        .food-image {
+            height: 215px;
         }
-    </style>
+
+        .menu-body {
+            min-height: 165px;
+        }
+
+        .toolbar {
+            align-items: stretch;
+            flex-direction: column;
+        }
+
+        .search {
+            max-width: none;
+        }
+
+        .banner-copy {
+            max-width: 78%;
+        }
+
+        .banner img {
+            width: 58%;
+        }
+
+        .footer {
+            flex-direction: column;
+        }
+
+        .admin span {
+            display: none;
+        }
+
+        .breadcrumb {
+            font-size: 11px;
+        }
+    }
+</style>
+```
+
 </head>
+
 <body>
-<nav class="navbar">
-    <h2>🍽 Restaurant Management</h2>
+    <aside class="sidebar">
+        <a href="{% url 'home' %}" class="brand">
+            <div class="brand-icon">✦</div>
+            <div>
+                <h2>Savora</h2>
+                <p>Restaurant Management</p>
+            </div>
+        </a>
 
-    <div class="nav-links">
-        <a href="/menu/">Menu</a>
-        <a href="/tables/">Tables</a>
+```
+    <div class="nav-label">WORKSPACE</div>
+
+    <nav class="nav">
+        <a href="{% url 'home' %}">
+            <span class="nav-icon">⌂</span>
+            <span class="nav-text">Dashboard</span>
+        </a>
+
+        <a href="{% url 'menu' %}" class="active">
+            <span class="nav-icon">♨</span>
+            <span class="nav-text">Menu</span>
+        </a>
+
+        <a href="{% url 'table-list' %}">
+            <span class="nav-icon">▤</span>
+            <span class="nav-text">Tables</span>
+        </a>
+
+        <a href="{% url 'create-reservation' %}">
+            <span class="nav-icon">▦</span>
+            <span class="nav-text">Reservations</span>
+        </a>
+
+        <a href="{% url 'create-order' %}">
+            <span class="nav-icon">🛒</span>
+            <span class="nav-text">New Order</span>
+        </a>
+
+        <a href="{% url 'order-list' %}">
+            <span class="nav-icon">☷</span>
+            <span class="nav-text">Order History</span>
+        </a>
+    </nav>
+
+    <div class="sidebar-bottom">
+        Good Food<br>
+        Brings People<br>
+        Together
     </div>
-</nav>
-<div class="container">
+</aside>
 
-    <h1>🍽 Restaurant Menu</h1>
-
-    <div class="menu-grid">
-
-        {% for item in menu_items %}
-
-        <div class="card">
-
-            <div class="item-name">
-                {{ item.name }}
-            </div>
-
-            <div class="category">
-                {{ item.category }}
-            </div>
-
-            <div class="price">
-                ₹{{ item.price }}
-            </div>
-
-            <div class="stock">
-
-                Stock:
-                {% if item.stock_quantity > 10 %}
-                    <span class="available">
-                        {{ item.stock_quantity }} Available
-                    </span>
-                {% else %}
-                    <span class="low-stock">
-                        Only {{ item.stock_quantity }} Left
-                    </span>
-                {% endif %}
-
-            </div>
-
+<div class="main">
+    <header class="topbar">
+        <div class="breadcrumb">
+            <a href="{% url 'home' %}">Dashboard</a>
+            &nbsp; / &nbsp;
+            <strong>Menu Management</strong>
         </div>
 
-        {% endfor %}
+        <div class="admin">
+            <div class="avatar">A</div>
+            <span>Administrator</span>
+        </div>
+    </header>
 
-    </div>
+    <main class="content">
+        <section class="page-heading">
+            <div>
+                <div class="eyebrow">Discover our selection</div>
+                <h1>Menu Management</h1>
+                <p class="subtitle">
+                    Explore your restaurant's dishes, pricing and current stock.
+                </p>
+            </div>
 
+            <a href="{% url 'create-order' %}" class="button">
+                ＋ Create an order
+            </a>
+        </section>
+
+        <section class="banner">
+            <div class="banner-copy">
+                <div class="eyebrow" style="color:#a9ddc2">Made with care</div>
+                <h2>Good food starts<br>with great ingredients.</h2>
+                <p>
+                    Browse your menu and check item availability before taking an order.
+                </p>
+            </div>
+
+            <img
+                src="https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&w=1000&q=85"
+                alt="Freshly prepared food"
+                onerror="this.style.display='none';"
+            >
+        </section>
+
+        <section>
+            <div class="toolbar">
+                <label class="search">
+                    <span>⌕</span>
+                    <input
+                        type="search"
+                        id="menuSearch"
+                        placeholder="Search by dish name or category..."
+                        aria-label="Search menu items"
+                    >
+                </label>
+
+                <div class="result-count">
+                    <span id="visibleCount">{{ menu_items|length }}</span>
+                    menu items
+                </div>
+            </div>
+
+            <div class="menu-grid" id="menuGrid">
+                {% for item in menu_items %}
+                <article
+                    class="menu-card"
+                    data-name="{{ item.name|lower }}"
+                    data-category="{{ item.category|lower }}"
+                >
+                    <div class="food-image">
+                        {% with name=item.name|lower category=item.category|lower %}
+
+                            {% if 'aloe' in name %}
+                                <img
+                                    src="https://images.unsplash.com/photo-1544145945-f90425340c7e?auto=format&fit=crop&w=700&q=85"
+                                    alt="Aloe vera drink"
+                                    loading="lazy"
+                                    onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1513558161293-cdaf765edfd7?auto=format&fit=crop&w=700&q=85';"
+                                >
+
+                            {% elif 'lime juice' in name or 'lemon juice' in name or 'lemonade' in name %}
+                                <img
+                                    src="https://images.unsplash.com/photo-1513558161293-cdaf765edfd7?auto=format&fit=crop&w=700&q=85"
+                                    alt="Fresh lime and lemon juice"
+                                    loading="lazy"
+                                    onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1544145945-f90425340c7e?auto=format&fit=crop&w=700&q=85';"
+                                >
+
+                            {% elif 'biryani' in name %}
+                                <img
+                                    src="https://www.licious.in/blog/wp-content/uploads/2022/06/chicken-biryani-awadhi-01.jpg"
+                                    alt="{{ item.name }}"
+                                    loading="lazy"
+                                    onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1563379091339-03246963d96c?auto=format&fit=crop&w=700&q=85';"
+                                >
+
+                            {% elif 'dosa' in name %}
+                                <img
+                                    src="https://images.unsplash.com/photo-1668236543090-82eba5ee5976?auto=format&fit=crop&w=700&q=85"
+                                    alt="{{ item.name }}"
+                                    loading="lazy"
+                                >
+
+                            {% elif 'idli' in name or 'vada' in name %}
+                                <img
+                                    src="https://images.unsplash.com/photo-1589301760014-d929f3979dbc?auto=format&fit=crop&w=700&q=85"
+                                    alt="{{ item.name }}"
+                                    loading="lazy"
+                                >
+
+                            {% elif 'burger' in name %}
+                                <img
+                                    src="https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=700&q=85"
+                                    alt="{{ item.name }}"
+                                    loading="lazy"
+                                >
+
+                            {% elif 'paneer' in name %}
+                                <img
+                                    src="https://www.cubesnjuliennes.com/wp-content/uploads/2019/11/Paneer-Butter-Masala-1.jpg"
+                                    alt="{{ item.name }}"
+                                    loading="lazy"
+                                    onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1631452180519-c014fe946bc7?auto=format&fit=crop&w=700&q=85';"
+                                >
+
+                            {% elif 'pizza' in name %}
+                                <img
+                                    src="https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&w=700&q=85"
+                                    alt="{{ item.name }}"
+                                    loading="lazy"
+                                >
+
+                            {% elif 'pasta' in name or 'noodle' in name %}
+                                <img
+                                    src="https://images.unsplash.com/photo-1473093295043-cdd812d0e601?auto=format&fit=crop&w=700&q=85"
+                                    alt="{{ item.name }}"
+                                    loading="lazy"
+                                >
+
+                            {% elif 'sandwich' in name %}
+                                <img
+                                    src="https://images.unsplash.com/photo-1528735602780-2552fd46c7af?auto=format&fit=crop&w=700&q=85"
+                                    alt="{{ item.name }}"
+                                    loading="lazy"
+                                >
+
+                            {% elif 'cake' in name %}
+                                <img
+                                    src="https://images.unsplash.com/photo-1578985545062-69928b1d9587?auto=format&fit=crop&w=700&q=85"
+                                    alt="{{ item.name }}"
+                                    loading="lazy"
+                                >
+
+                            {% elif 'ice cream' in name or 'icecream' in name %}
+                                <img
+                                    src="https://images.unsplash.com/photo-1563805042-7684c019e1cb?auto=format&fit=crop&w=700&q=85"
+                                    alt="{{ item.name }}"
+                                    loading="lazy"
+                                >
+
+                            {% elif 'coffee' in name %}
+                                <img
+                                    src="https://images.unsplash.com/photo-1509042239860-f550ce710b93?auto=format&fit=crop&w=700&q=85"
+                                    alt="{{ item.name }}"
+                                    loading="lazy"
+                                >
+
+                            {% elif 'tea' in name %}
+                                <img
+                                    src="https://images.unsplash.com/photo-1544787219-7f47ccb76574?auto=format&fit=crop&w=700&q=85"
+                                    alt="{{ item.name }}"
+                                    loading="lazy"
+                                >
+
+                            {% elif 'juice' in name or 'mojito' in name or 'drink' in name %}
+                                <img
+                                    src="https://images.unsplash.com/photo-1513558161293-cdaf765edfd7?auto=format&fit=crop&w=700&q=85"
+                                    alt="{{ item.name }}"
+                                    loading="lazy"
+                                >
+
+                            {% elif 'milkshake' in name or 'shake' in name %}
+                                <img
+                                    src="https://images.unsplash.com/photo-1572490122747-3968b75cc699?auto=format&fit=crop&w=700&q=85"
+                                    alt="{{ item.name }}"
+                                    loading="lazy"
+                                >
+
+                            {% elif 'salad' in name %}
+                                <img
+                                    src="https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&w=700&q=85"
+                                    alt="{{ item.name }}"
+                                    loading="lazy"
+                                >
+
+                            {% elif 'tandoori' in name or 'grilled chicken' in name %}
+                                <img
+                                    src="https://images.unsplash.com/photo-1532550907401-a500c9a57435?auto=format&fit=crop&w=700&q=85"
+                                    alt="{{ item.name }}"
+                                    loading="lazy"
+                                >
+
+                            {% elif 'chicken' in name %}
+                                <img
+                                    src="https://images.unsplash.com/photo-1532550907401-a500c9a57435?auto=format&fit=crop&w=700&q=85"
+                                    alt="{{ item.name }}"
+                                    loading="lazy"
+                                >
+
+                            {% elif 'fish' in name or 'seafood' in name or 'prawn' in name %}
+                                <img
+                                    src="https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?auto=format&fit=crop&w=700&q=85"
+                                    alt="{{ item.name }}"
+                                    loading="lazy"
+                                >
+
+                            {% elif 'soup' in name %}
+                                <img
+                                    src="https://images.unsplash.com/photo-1547592166-23ac45744acd?auto=format&fit=crop&w=700&q=85"
+                                    alt="{{ item.name }}"
+                                    loading="lazy"
+                                >
+
+                            {% elif 'fried rice' in name %}
+                                <img
+                                    src="https://images.unsplash.com/photo-1512058564366-18510be2db19?auto=format&fit=crop&w=700&q=85"
+                                    alt="{{ item.name }}"
+                                    loading="lazy"
+                                >
+
+                            {% elif 'rice' in name %}
+                                <img
+                                    src="https://images.unsplash.com/photo-1516684732162-798a0062be99?auto=format&fit=crop&w=700&q=85"
+                                    alt="{{ item.name }}"
+                                    loading="lazy"
+                                >
+
+                            {% elif 'roll' in name or 'wrap' in name %}
+                                <img
+                                    src="https://images.unsplash.com/photo-1626700051175-6818013e1d4f?auto=format&fit=crop&w=700&q=85"
+                                    alt="{{ item.name }}"
+                                    loading="lazy"
+                                >
+
+                            {% elif 'french fries' in name or 'fries' in name %}
+                                <img
+                                    src="https://images.unsplash.com/photo-1573080496219-bb080dd4f877?auto=format&fit=crop&w=700&q=85"
+                                    alt="{{ item.name }}"
+                                    loading="lazy"
+                                >
+
+                            {% elif 'pancake' in name or 'waffle' in name %}
+                                <img
+                                    src="https://images.unsplash.com/photo-1528207776546-365bb710ee93?auto=format&fit=crop&w=700&q=85"
+                                    alt="{{ item.name }}"
+                                    loading="lazy"
+                                >
+
+                            {% elif 'dessert' in category or 'sweet' in category %}
+                                <img
+                                    src="https://images.unsplash.com/photo-1551024506-0bccd828d307?auto=format&fit=crop&w=700&q=85"
+                                    alt="{{ item.name }}"
+                                    loading="lazy"
+                                >
+
+                            {% elif 'starter' in category or 'appetizer' in category %}
+                                <img
+                                    src="https://images.unsplash.com/photo-1541529086526-db283c563270?auto=format&fit=crop&w=700&q=85"
+                                    alt="{{ item.name }}"
+                                    loading="lazy"
+                                >
+
+                            {% elif 'beverage' in category or 'drink' in category %}
+                                <img
+                                    src="https://images.unsplash.com/photo-1513558161293-cdaf765edfd7?auto=format&fit=crop&w=700&q=85"
+                                    alt="{{ item.name }}"
+                                    loading="lazy"
+                                >
+
+                            {% else %}
+                                <img
+                                    src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=700&q=85"
+                                    alt="{{ item.name }}"
+                                    loading="lazy"
+                                >
+                            {% endif %}
+                        {% endwith %}
+
+                        <span class="category-tag">
+                            {{ item.category|default:"Menu item" }}
+                        </span>
+                    </div>
+
+                    <div class="menu-body">
+                        <div class="item-top">
+                            <h2 class="item-name">{{ item.name }}</h2>
+                            <div class="price">₹{{ item.price|floatformat:2 }}</div>
+                        </div>
+
+                        <p class="item-description">
+                            A selection from our restaurant menu, prepared for a memorable dining experience.
+                        </p>
+
+                        <div class="item-bottom">
+                            {% if item.stock_quantity <= 0 %}
+                                <span class="stock out">
+                                    <span class="stock-dot"></span>
+                                    Out of stock
+                                </span>
+                            {% elif item.stock_quantity <= 5 %}
+                                <span class="stock low">
+                                    <span class="stock-dot"></span>
+                                    {{ item.stock_quantity }} left · Low stock
+                                </span>
+                            {% else %}
+                                <span class="stock">
+                                    <span class="stock-dot"></span>
+                                    {{ item.stock_quantity }} available
+                                </span>
+                            {% endif %}
+
+                            <span class="item-id">Menu item</span>
+                        </div>
+                    </div>
+                </article>
+
+                {% empty %}
+                <div class="empty">
+                    <div class="empty-icon">🍽️</div>
+                    <h2>Your menu is waiting</h2>
+                    <p>
+                        Add menu items through the Django admin panel to display them here.
+                    </p>
+                </div>
+                {% endfor %}
+            </div>
+
+            <div class="empty" id="noResults" style="display:none; margin-top:15px;">
+                <div class="empty-icon">⌕</div>
+                <h2>No matching dishes</h2>
+                <p>Try another dish name or category.</p>
+            </div>
+        </section>
+
+        <footer class="footer">
+            <span><strong>Savora</strong> · Restaurant Management System</span>
+            <span>Good food brings people together.</span>
+        </footer>
+    </main>
 </div>
+
+<script>
+    const menuSearch = document.getElementById("menuSearch");
+    const menuCards = Array.from(document.querySelectorAll(".menu-card"));
+    const visibleCount = document.getElementById("visibleCount");
+    const noResults = document.getElementById("noResults");
+
+    function filterMenu() {
+        const query = menuSearch.value.trim().toLowerCase();
+        let visible = 0;
+
+        menuCards.forEach(function (card) {
+            const name = card.dataset.name || "";
+            const category = card.dataset.category || "";
+            const matches = name.includes(query) || category.includes(query);
+
+            card.style.display = matches ? "" : "none";
+
+            if (matches) {
+                visible++;
+            }
+        });
+
+        visibleCount.textContent = visible;
+        noResults.style.display =
+            visible === 0 && menuCards.length > 0 ? "block" : "none";
+    }
+
+    menuSearch.addEventListener("input", filterMenu);
+</script>
+
 
 </body>
 </html>
